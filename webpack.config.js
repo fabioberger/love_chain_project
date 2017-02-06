@@ -1,38 +1,38 @@
 const path = require('path');
 const webpack = require('webpack');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
-    entry: ['./js/app.js'],
+    entry: ['./app/js/app.js'],
     output: {
-        path: path.join(__dirname, '/public'),
+        path: path.join(__dirname, '/app/public'),
         filename: 'bundle.js',
     },
     resolve: {
-        root: [path.join(__dirname, '/js')],
-        extensions: ['', '.js', '.jsx', '.json'],
+        modules: [
+            path.join(__dirname, '/app/js'),
+            'node_modules'
+        ],
+        extensions: ['.js', '.jsx', '.json'],
     },
     module: {
-        loaders: [
+        rules: [
             {
                 test: /\.jsx?$/,
                 loader: 'babel-loader',
                 exclude: /node_modules/,
-                query: {
+                options: {
                     presets: ['react'],
                 },
             },
             {
                 test: /\.less$/,
-                loader: 'style!css!less',
+                loader: 'style-loader!css-loader!less-loader',
                 exclude: /node_modules/,
             },
             {
                 test: /\.css$/,
-                loaders: ['style', 'css']
-            },
-            {
-                test: /\.json$/,
-                loader: 'json-loader'
+                loaders: ['style-loader', 'css-loader']
             },
         ],
     },
