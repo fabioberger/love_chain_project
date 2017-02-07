@@ -122,10 +122,13 @@ contract('ValentineRegistry', accounts => {
             value: sufficientValue,
         });
 
-        const result = await registry.acceptValentineRequest(accountTwo);
-        if (!_.includes(_.map(result.logs, log => log.event), 'LogRequestAccepted')) {
+        const acceptResult = await registry.acceptValentineRequest(accountTwo);
+        if (!_.includes(_.map(acceptResult.logs, log => log.event), 'LogRequestAccepted')) {
             assert(false, 'Expected event `LogRequestAccepted` was not fired.');
         }
+
+        const request = await registry.requests.call(accountTwo);
+        assert.equal(request[4], true, 'Expected wasAccepted to be true after call to acceptValentineRequest');
     });
 });
 
