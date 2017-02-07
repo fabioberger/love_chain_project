@@ -19,6 +19,8 @@ contract ValentineRegistry {
     uint public numRequesters;
     address[] public requesters;
     address constant ADDRESS_NULL = 0;
+    uint constant MAX_CUSTOM_MESSAGE_LENGTH = 140;
+    uint constant MAX_NAME_LENGTH = 25;
     uint constant COST = 0.1 ether;
 
     modifier restricted() {
@@ -63,6 +65,10 @@ contract ValentineRegistry {
     function createNewValentineRequest(string requesterName, string valentineName, string customMessage,
         address valentineAddress)
         internal {
+        if (bytes(requesterName).length > MAX_NAME_LENGTH || bytes(valentineName).length > MAX_NAME_LENGTH
+            || bytes(customMessage).length > MAX_CUSTOM_MESSAGE_LENGTH) {
+            throw; // invalid request
+        }
         bool doesExist = true;
         bool wasAccepted = false;
         Request memory r = Request(requesterName, valentineName, customMessage, doesExist,
