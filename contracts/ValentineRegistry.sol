@@ -74,10 +74,11 @@ contract ValentineRegistry {
     }
 
     function acceptValentineRequest(address requesterAddress) public {
-        if (!requests[requesterAddress].doesExist) {
+        Request request = requests[requesterAddress];
+        if (!request.doesExist) {
             throw; // the request doesn't exist
         }
-        requests[requesterAddress].wasAccepted = true;
+        request.wasAccepted = true;
         LogRequestAccepted(requesterAddress);
     }
 
