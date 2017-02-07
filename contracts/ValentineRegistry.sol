@@ -2,6 +2,9 @@ pragma solidity ^0.4.2;
 
 contract ValentineRegistry {
 
+    event LogValentineRequestCreated(string requesterName, string valentineName, string customMessage, bool wasAccepted, address valentineAddress, address requesterAddress);
+    event LogRequestAccepted(address requesterAddress);
+
     struct Request {
         string requesterName;
         string valentineName;
@@ -33,9 +36,6 @@ contract ValentineRegistry {
             throw;
         _;
     }
-
-    event LogValentineRequestCreated(string requesterName, string valentineName, string customMessage, address valentineAddress, address requesterAddress);
-    event LogRequestAccepted(address requesterAddress);
 
     function ValentineRegistry() {
         owner = msg.sender;
