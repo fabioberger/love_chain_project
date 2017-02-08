@@ -6,11 +6,6 @@ const utils = {
         }
         return keywords;
     },
-    assert(condition, message) {
-        if (!condition) {
-            throw new Error('Assertion failed:', message);
-        }
-    },
 };
 
 module.exports = utils;

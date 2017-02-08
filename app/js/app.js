@@ -1,3 +1,4 @@
+require("babel-polyfill");
 const React = require('react');
 const ReactDOM = require('react-dom');
 const Router = require('react-router').Router;
@@ -6,8 +7,10 @@ const IndexRoute = require('react-router').IndexRoute;
 const Link = require('react-router').Link;
 const hashHistory = require("react-router").hashHistory
 const App = require('./components/app');
-const Home = require('./components/home');
-const About = require('./components/about');
+const Home = require('./components/pages/home');
+const About = require('./components/pages/about');
+const injectTapEventPlugin = require('react-tap-event-plugin');
+injectTapEventPlugin();
 
 require('./../../node_modules/basscss/css/basscss.css');
 require('./../../node_modules/basscss-forms/index.css');
