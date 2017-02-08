@@ -69,7 +69,7 @@ class BlockchainState {
     async getRequestIfExistsAsync(address) {
         assert(this.isValidAddress(address), 'address must be valid ethereum address');
 
-        const requestArr = await this._valentineRegistry.getRequestByRequestAddress.call(address);
+        const requestArr = await this._valentineRegistry.getRequestByRequesterAddress.call(address);
         const request = this._convertRequestArrToObj(requestArr);
         if (!this._doesRequestExist(request)) {
             return null;

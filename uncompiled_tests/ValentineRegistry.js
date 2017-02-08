@@ -127,8 +127,8 @@ contract('ValentineRegistry', accounts => {
             assert(false, 'Expected event `LogRequestAccepted` was not fired.');
         }
 
-        const request = await registry.requests.call(accountTwo);
-        assert.equal(request[4], true, 'Expected wasAccepted to be true after call to acceptValentineRequest');
+        const request = await registry.getRequestByRequesterAddress.call(accountTwo);
+        assert.equal(request[3], true, 'Expected wasAccepted to be true after call to acceptValentineRequest');
     });
 });
 

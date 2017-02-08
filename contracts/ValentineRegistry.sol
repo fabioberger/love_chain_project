@@ -15,7 +15,7 @@ contract ValentineRegistry {
     }
     address public owner;
     // Requests maps requester addresses to the requests details
-    mapping (address => Request) public requests;
+    mapping (address => Request) private requests;
     uint public numRequesters;
     address[] public requesters;
     address constant ADDRESS_NULL = 0;
@@ -86,6 +86,14 @@ contract ValentineRegistry {
         }
         request.wasAccepted = true;
         LogRequestAccepted(requesterAddress);
+    }
+
+    function getRequestByRequesterAddress(address requesterAddress) public returns (string, string, string, bool, address, address) {
+        Request r = requests[requesterAddress];
+        if (!r.doesExist) {
+            return ("", "", "", false, ADDRESS_NULL, ADDRESS_NULL);
+        }
+        return (r.requesterName, r.valentineName, r.customMessage, r.wasAccepted, r.valentineAddress, requesterAddress);
     }
 
     function getRequestByIndex(uint index) public returns (string, string, string, bool, address, address) {
