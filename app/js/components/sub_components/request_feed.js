@@ -1,5 +1,5 @@
 const React = require('react');
-const BlockchainState = require('../../blockchain_state');
+const BlockchainState = require('js/blockchain_state');
 const Paper = require('material-ui').Paper;
 const colors = require('material-ui/styles').colors;
 

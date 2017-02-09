@@ -1,5 +1,5 @@
 const EventEmitter2 = require('eventemitter2').EventEmitter2;
-const assert = require('./assert');
+const assert = require('js/assert');
 
 class Web3Wrapper extends EventEmitter2 {
     constructor(web3Instance) {

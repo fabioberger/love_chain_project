@@ -10,4 +10,8 @@ assert.isString = value => {
     assert(_.isString(value), `Expected ${value} to be a string`);
 };
 
+assert.isFunction = value => {
+    assert(_.isFunction(value), `Expected ${value} to be a function`);
+};
+
 module.exports = assert;

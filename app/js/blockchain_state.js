@@ -2,9 +2,9 @@ const Web3 = require('web3');
 const contract = require('truffle-contract');
 const deepEqual = require('deep-equal');
 const EventEmitter2 = require('eventemitter2').EventEmitter2;
-const assert = require('./assert');
+const assert = require('js/assert');
 const ValentineRegistryArtifacts = require('../../build/contracts/ValentineRegistry.json');
-const Web3Wrapper = require('./web3_wrapper');
+const Web3Wrapper = require('js/web3_wrapper');
 
 const NULL_ADDRESS = '0x0000000000000000000000000000000000000000';
 

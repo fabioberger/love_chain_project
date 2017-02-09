@@ -3,12 +3,12 @@ const React = require('react');
 const Link = require('react-router').Link
 const RaisedButton = require('material-ui').RaisedButton;
 const Paper = require('material-ui').Paper;
-const BlockchainState = require('../../blockchain_state');
-const RequestFeed = require('../sub_components/request_feed');
-const NewRequestDialog = require('../sub_components/new_request_dialog');
-const AcceptRequestDialog = require('../sub_components/accept_request_dialog');
-const Loading = require('../sub_components/loading');
-const Error = require('../sub_components/error');
+const BlockchainState = require('js/blockchain_state');
+const RequestFeed = require('js/components/sub_components/request_feed');
+const NewRequestDialog = require('js/components/sub_components/new_request_dialog');
+const AcceptRequestDialog = require('js/components/sub_components/accept_request_dialog');
+const Loading = require('js/components/sub_components/loading');
+const Error = require('js/components/sub_components/error');
 
 const Home = React.createClass({
     propTypes: {

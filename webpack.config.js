@@ -14,6 +14,10 @@ module.exports = {
             'node_modules'
         ],
         extensions: ['.js', '.jsx', '.json'],
+        alias: {
+            js: path.join(__dirname, '/app/js'),
+            less: path.join(__dirname, '/app/less'),
+        },
     },
     module: {
         rules: [

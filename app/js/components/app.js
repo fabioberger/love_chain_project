@@ -5,8 +5,8 @@ const Link = require('react-router').Link
 const MuiThemeProvider = require('material-ui/styles').MuiThemeProvider;
 const getMuiTheme = require('material-ui/styles').getMuiTheme;
 const colors = require('material-ui/styles').colors;
-const utils = require('./../utils');
-const BlockchainState = require('../blockchain_state');
+const utils = require('js/utils');
+const BlockchainState = require('js/blockchain_state');
 
 const App = React.createClass({
     componentWillMount() {
