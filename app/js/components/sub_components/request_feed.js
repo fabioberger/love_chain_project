@@ -8,14 +8,14 @@ const RequestFeed = React.createClass({
         blockchainState: React.PropTypes.instanceOf(BlockchainState).isRequired,
     },
     componentDidMount() {
-        // TODO: replace this with an event binding impl.
-        setInterval(() => {
-            this.forceUpdate();
-        }, 1000);
+        this.props.blockchainState.on('eventReceived', this.forceUpdate.bind(this));
+    },
+    componentWillMount() {
+        this.props.blockchainState.removeListener('eventReceived', this.forceUpdate.bind(this));
     },
     render() {
         return (
-            <div className="m3" style={{backgroundColor: "#FFCDD2"}}>
+            <div>
                 {this._renderRequests()}
             </div>
         );

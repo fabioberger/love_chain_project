@@ -1,21 +1,26 @@
 const Web3 = require('web3');
 const contract = require('truffle-contract');
 const deepEqual = require('deep-equal');
+const EventEmitter2 = require('eventemitter2').EventEmitter2;
 const assert = require('./assert');
 const ValentineRegistryArtifacts = require('../../build/contracts/ValentineRegistry.json');
 const Web3Wrapper = require('./web3_wrapper');
 
 const NULL_ADDRESS = '0x0000000000000000000000000000000000000000';
 
-class BlockchainState {
+class BlockchainState extends EventEmitter2 {
     constructor(onUpdatedFn) {
+        super();
         this._onUpdatedFn = onUpdatedFn;
         this._err = null;
         this._isLoaded = false;
         this._wrappedWeb3 = null;
+        this._networkId = null;
         this._valentineRegistry = null;
         this._valentineRequests = {};
-        this._instantiateContractFireAndForgetAsync();
+        this._logValentineRequestCreated = null;
+        this._logRequestAccepted = null;
+        this._onPageLoadInitFireAndForgetAsync();
     }
     hasError() {
         return this._err !== null;
@@ -76,29 +81,44 @@ class BlockchainState {
         }
         return request;
     }
-    async _instantiateContractFireAndForgetAsync() {
+    async _onPageLoadInitFireAndForgetAsync() {
         await this._onPageLoadAsync(); // wait for page to load
-        const existingWeb3Instance = window.web3;
-        const wrappedExistingWeb3 = new Web3Wrapper(existingWeb3Instance);
-        const isConnectedToANetwork = wrappedExistingWeb3.isConnectedToANetworkAsync();
-        if (isConnectedToANetwork) {
+
+        const wrappedExistingWeb3 = new Web3Wrapper(window.web3);
+        const doesWeb3InstanceExist = wrappedExistingWeb3.doesExist();
+        if (!doesWeb3InstanceExist) {
+            // TODO: replace error with backup option i.e infura.io
+            this._err = 'NO_WEB3_INSTANCE_FOUND';
+            this._isLoaded = true;
+            this._onUpdatedFn();
+        } else {
             // Create new instance of web3 with only the currentProvider taken from the pre-existing
             // instance so as to not depend on third-party's version of web3.
             const web3Instance = new Web3(wrappedExistingWeb3.get('currentProvider'));
+            wrappedExistingWeb3.destroy();
             this._wrappedWeb3 = new Web3Wrapper(web3Instance);
+            this._wrappedWeb3.on('networkConnection', this._networkConnectionChangedAsync.bind(this));
 
+            await this._instantiateContractAsync();
+        }
+    }
+    async _instantiateContractAsync() {
+        this._networkId = await this._wrappedWeb3.getNetworkIdIfExists();
+        const doesNetworkExist = !_.isNull(this._networkId);
+        if (doesNetworkExist) {
             // instantial contract instance
             const valentineRegistry = await contract(ValentineRegistryArtifacts);
             valentineRegistry.setProvider(this._wrappedWeb3.get('currentProvider'));
-            this._valentineRegistry = await valentineRegistry.deployed();
-
-            // hydrate existing valentine requests
-            this._valentineRequests = await this._getExistingRequestsAsync();
-
-            this._startWatchingContractForEvents();
+            try {
+                this._valentineRegistry = await valentineRegistry.deployed().then();
+                // hydrate existing valentine requests
+                this._valentineRequests = await this._getExistingRequestsAsync();
+                this._startWatchingContractForEvents();
+            } catch(err) {
+                this._err = 'CONTRACT_NOT_DEPLOYED_ON_NETWORK';
+            }
         } else {
-            // TODO: replace error with backup option i.e infura.io
-            this._err = 'No web3 instance detected in your browser';
+            this._err = 'DISCONNECTED_FROM_ETHEREUM_NODE';
         }
         this._isLoaded = true;
         this._onUpdatedFn();
@@ -114,8 +134,16 @@ class BlockchainState {
         return requests;
     }
     _startWatchingContractForEvents() {
-        const LogValentineRequestCreated = this._valentineRegistry.LogValentineRequestCreated({}, 'latest');
-        LogValentineRequestCreated.watch((err, result) => {
+        // Ensure we are only ever listening to one set of events
+        if (!_.isNull(this._logValentineRequestCreated)) {
+            this._logValentineRequestCreated.stopWatching();
+        }
+        if (!_.isNull(this._logRequestAccepted)) {
+            this._logRequestAccepted.stopWatching();
+        }
+
+        this._logValentineRequestCreated = this._valentineRegistry.LogValentineRequestCreated({}, 'latest');
+        this._logValentineRequestCreated.watch((err, result) => {
             if (err) {
                 console.log('Warning: An error occured while listening to LogValentineRequestCreated events:', err);
                 return;
@@ -126,10 +154,11 @@ class BlockchainState {
             if (!this._valentineRequests[request.requesterAddress]) {
                 this._valentineRequests[request.requesterAddress] = request;
             }
+            this.emit('eventReceived');
         });
 
-        const LogRequestAccepted = this._valentineRegistry.LogRequestAccepted({}, 'latest');
-        LogRequestAccepted.watch((err, result) => {
+        this._logRequestAccepted = this._valentineRegistry.LogRequestAccepted({}, 'latest');
+        this._logRequestAccepted.watch((err, result) => {
             if (err) {
                 console.log('Warning: An error occured while listening to LogRequestAccepted events:', err);
                 return;
@@ -139,7 +168,20 @@ class BlockchainState {
             if (this._valentineRequests[eventData.requesterAddress]) {
                 this._valentineRequests[eventData.requesterAddress].wasAccepted = true;
             }
+            this.emit('eventReceived');
         });
+    }
+    async _networkConnectionChangedAsync(networkIdIfExists) {
+        const isConnected = !_.isNull(networkIdIfExists);
+        if (!isConnected) {
+            this._err = 'DISCONNECTED_FROM_ETHEREUM_NODE';
+        } else if(this._networkId !== networkIdIfExists) {
+            this._err = '';
+            await this._instantiateContractAsync();
+            // TODO: perhaps add a snackbar notifying user of the network change
+        }
+        this._networkId = networkIdIfExists;
+        this._onUpdatedFn();
     }
     async _onPageLoadAsync() {
         return new Promise((resolve,reject) => {

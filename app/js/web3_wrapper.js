@@ -1,7 +1,9 @@
+const EventEmitter2 = require('eventemitter2').EventEmitter2;
 const assert = require('./assert');
 
-class Web3Wrapper {
+class Web3Wrapper extends EventEmitter2 {
     constructor(web3Instance) {
+        super();
         this._syncMethods = [
             'isAddress',
             'toWei',
@@ -19,6 +21,9 @@ class Web3Wrapper {
         } else {
             this._web3 = web3Instance;
         }
+
+        this._watchNetworkIntervalId = null;
+        this._startEmittingNetworkConnectionStateAsync();
     }
     doesExist() {
         return !_.isNull(this._web3);
@@ -26,17 +31,34 @@ class Web3Wrapper {
     getFirstAccount() {
         return this._web3.eth.accounts[0]
     }
-    async isConnectedToANetworkAsync() {
+    async getNetworkIdIfExists() {
         if (!this.doesExist()) {
-            return false;
+            return null;
         }
 
         try {
-            await this.callAsync('version.getNetwork');
-            return true;
+            const networkId = await this.callAsync('version.getNetwork');
+            return networkId;
         } catch(err) {
-            return false;
+            return null;
         }
+    }
+    async _startEmittingNetworkConnectionStateAsync() {
+        if (!_.isNull(this._watchNetworkIntervalId)) {
+            return; // we are already emitting the state
+        }
+
+        let prevNetworkId = await this.getNetworkIdIfExists();
+        this._watchNetworkIntervalId = setInterval(async () => {
+            const currentNetworkId = await this.getNetworkIdIfExists();
+            if (currentNetworkId !== prevNetworkId) {
+                prevNetworkId = currentNetworkId;
+                this.emit('networkConnection', currentNetworkId);
+            }
+        }, 1000);
+    }
+    _stopEmittingNetworkConnectionStateAsync() {
+        clearInterval(this._watchNetworkIntervalId);
     }
     get(propertyPath) {
         assert.isString(propertyPath);
@@ -96,6 +118,9 @@ class Web3Wrapper {
         });
         const methodInstance = web3SubObj[methodName];
         return {methodInstance, web3SubObj};
+    }
+    destroy() {
+        this._stopEmittingNetworkConnectionStateAsync();
     }
 }
 
