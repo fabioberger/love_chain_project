@@ -154,7 +154,7 @@ contract('ValentineRegistry', accounts => {
     });
 });
 
-function didContractThrow(err) {
+const didContractThrow = err => {
     const errStr = err + '';
     const didTestRPCContractThrow = errStr.indexOf('invalid JUMP') > -1 || errStr.indexOf('out of gas') > -1;
     const didGethContractThrow = errStr.indexOf('please check your gas amount') > -1;

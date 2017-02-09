@@ -1,7 +1,7 @@
 const React = require('react');
 const Isvg = require('react-inlinesvg');
 
-function Loading(props) {
+const Loading = props => {
     return (
         <div>
             <div>

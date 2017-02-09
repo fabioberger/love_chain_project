@@ -1,6 +1,6 @@
 const React = require('react');
 
-function RequiredLabelText(props) {
+const RequiredLabelText = props => {
     return (
         <span>
             {props.label}
