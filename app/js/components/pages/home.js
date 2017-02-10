@@ -59,20 +59,19 @@ class Home extends React.Component {
                 <div className="pl2 pr2 pt3 clearfix" style={{height: '37px'}}>
                 <RaisedButton
                     label="Accept Valentine Request"
-                    className="right"
+                    className="mr2 right"
                     disabled={hasBlockchainErr}
                     onTouchTap={() => this._acceptRequestDialogToggle(true)} />
-                    <RaisedButton
-                        label="Send Valentine Request"
-                        className="mr2 right"
-                        disabled={hasBlockchainErr}
-                        onTouchTap={() => this._newRequestDialogToggle(true)} />
+                <RaisedButton
+                    label="Send Valentine Request"
+                    className="ml2 left"
+                    disabled={hasBlockchainErr}
+                    onTouchTap={() => this._newRequestDialogToggle(true)} />
                 </div>
-                <div className="m3 overflow-scroll" style={{backgroundColor: "#FFCDD2", height: "450px"}}>
+                <div className="m3 overflow-scroll" style={{backgroundColor: "#FFCDD2", height: "530px"}}>
                     {hasBlockchainErr ?
                         <Error type={this.props.blockchainState.getError()} /> :
-                        <RequestFeed
-                            blockchainState={this.props.blockchainState} />
+                        <RequestFeed blockchainState={this.props.blockchainState} />
                     }
                 </div>
                 {!hasBlockchainErr &&
