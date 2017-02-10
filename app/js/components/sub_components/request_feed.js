@@ -4,16 +4,16 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import BlockchainState from 'js/blockchain_state';
 import RequestFeedPost from 'js/components/sub_components/request_feed_post';
 
-const RequestFeed = React.createClass({
-    propTypes: {
-        blockchainState: React.PropTypes.instanceOf(BlockchainState).isRequired,
-    },
+class RequestFeed extends React.Component {
+    static propTypes = {
+        blockchainState: React.PropTypes.instanceOf(BlockchainState),
+    }
     componentDidMount() {
         this.props.blockchainState.on('valentineRequestsUpdated', this.forceUpdate.bind(this));
-    },
+    }
     componentWillUnMount() {
         this.props.blockchainState.removeListener('valentineRequestsUpdated', this.forceUpdate.bind(this));
-    },
+    }
     render() {
         return (
             <ReactCSSTransitionGroup
@@ -23,7 +23,7 @@ const RequestFeed = React.createClass({
                 {this._renderRequests()}
             </ReactCSSTransitionGroup>
         );
-    },
+    }
     _renderRequests() {
         const requests = this.props.blockchainState.getValentineRequests();
         return _.map(requests, request => {
@@ -35,7 +35,7 @@ const RequestFeed = React.createClass({
                 wasAccepted={request.wasAccepted}
                 requesterAddress={request.requesterAddress} />
         });
-    },
-});
+    }
+}
 
 export default RequestFeed;

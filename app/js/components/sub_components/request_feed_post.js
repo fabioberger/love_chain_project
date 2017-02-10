@@ -2,8 +2,8 @@ import React from 'react';
 import {Paper} from 'material-ui';
 import {colors} from 'material-ui/styles';
 
-const RequestFeedPost = React.createClass({
-    propTypes: {
+class RequestFeedPost extends React.Component {
+    static propTypes = {
         requesterName: React.PropTypes.string.isRequired,
         valentineName: React.PropTypes.string.isRequired,
         customMessage: React.PropTypes.string.isRequired,
@@ -11,7 +11,7 @@ const RequestFeedPost = React.createClass({
         // Improvement: Implement a custom address type to validate these proptypes
         requesterAddress: React.PropTypes.string.isRequired,
         // style: React.PropTypes.object.isRequired,
-    },
+    }
     render() {
         const style = {
             // ...this.props.style,
@@ -45,7 +45,7 @@ const RequestFeedPost = React.createClass({
                 <div className="pb1">- {this.props.requesterName} ({this.props.requesterAddress})</div>
             </Paper>
         );
-    },
-});
+    }
+}
 
 export default RequestFeedPost;

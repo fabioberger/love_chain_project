@@ -8,19 +8,20 @@ import AcceptRequestDialog from 'js/components/sub_components/accept_request_dia
 import Loading from 'js/components/sub_components/loading';
 import Error from 'js/components/sub_components/error';
 
-const Home = React.createClass({
-    propTypes: {
+class Home extends React.Component {
+    static propTypes = {
         blockchainState: React.PropTypes.instanceOf(BlockchainState),
-    },
-    getInitialState() {
-        return {
+    }
+    constructor(props) {
+        super(props);
+        this.state = {
             isNewRequestDialogOpen: false,
             isAcceptRequestDialogOpen: false,
         };
-    },
+    }
     componentDidMount() {
         window.scrollTo(0, 0);
-    },
+    }
     render() {
         const style = {
             height: 800,
@@ -39,17 +40,17 @@ const Home = React.createClass({
                 }
             </Paper>
         );
-    },
+    }
     _newRequestDialogToggle(isOpen) {
         this.setState({
             isNewRequestDialogOpen: isOpen,
         });
-    },
+    }
     _acceptRequestDialogToggle(isOpen) {
         this.setState({
             isAcceptRequestDialogOpen: isOpen,
         });
-    },
+    }
     _renderValentineFeed() {
         const hasBlockchainErr = this.props.blockchainState.hasError();
 
@@ -89,7 +90,7 @@ const Home = React.createClass({
 
             </div>
         );
-    },
-});
+    }
+}
 
 export default Home;

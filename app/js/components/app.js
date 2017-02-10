@@ -6,12 +6,12 @@ import {MuiThemeProvider, getMuiTheme, colors} from 'material-ui/styles';
 import utils from 'js/utils';
 import BlockchainState from 'js/blockchain_state';
 
-const App = React.createClass({
+class App extends React.Component {
     componentWillMount() {
         this._blockchainState = new BlockchainState(() => {
             this.forceUpdate();
         });
-    },
+    }
     render() {
         const childrenWithProps = React.Children.map(this.props.children,
             (child) => React.cloneElement(child, {
@@ -46,7 +46,7 @@ const App = React.createClass({
                 </div>
             </MuiThemeProvider>
         );
-    },
-});
+    }
+}
 
 export default App;

@@ -3,21 +3,22 @@ import {Dialog, FlatButton, TextField} from 'material-ui';
 import BlockchainState from 'js/blockchain_state';
 import RequiredLabelText from 'js/components/sub_components/required_label_text';
 
-const AcceptRequestDialog = React.createClass({
-    propTypes: {
+class AcceptRequestDialog extends React.Component {
+    static propTypes = {
         isOpen: React.PropTypes.bool.isRequired,
         blockchainState: React.PropTypes.instanceOf(BlockchainState).isRequired,
         toggleDialogFn: React.PropTypes.func.isRequired,
-    },
-    getInitialState() {
-        return {
+    }
+    constructor(props) {
+        super(props);
+        this.state = {
             acceptRequestFormErrMsgs: {
                 general: '',
                 ...this._getEmptyAcceptRequestObj(),
             },
             form: this._getEmptyAcceptRequestObj(),
         };
-    },
+    }
     render() {
         const dialogActions = [
             <FlatButton
@@ -43,12 +44,12 @@ const AcceptRequestDialog = React.createClass({
                 <div className="pt2">{this.state.acceptRequestFormErrMsgs.general}</div>
             </Dialog>
         );
-    },
+    }
     _getEmptyAcceptRequestObj() {
         return {
             requesterAddress: '',
         };
-    },
+    }
     async _onAcceptRequestClickAsync() {
         const acceptRequestFormErrMsgs = {
             general: '',
@@ -91,19 +92,19 @@ const AcceptRequestDialog = React.createClass({
                 form: this._getEmptyAcceptRequestObj(),
             });
         }
-    },
+    }
     _onKeyUp(e) {
         if (e.key === 'Enter') {
             this._onAcceptRequestClickAsync();
         }
-    },
+    }
     _onUpdateForm(key, value) {
         const form = this.state.form;
         form[key] = value;
         this.setState({
             form,
         });
-    },
-});
+    }
+}
 
 export default AcceptRequestDialog;

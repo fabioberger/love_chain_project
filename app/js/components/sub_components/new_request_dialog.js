@@ -3,21 +3,22 @@ import {Dialog, FlatButton, TextField} from 'material-ui';
 import BlockchainState from 'js/blockchain_state';
 import RequiredLabelText from 'js/components/sub_components/required_label_text';
 
-const NewRequestDialog = React.createClass({
-    propTypes: {
+class NewRequestDialog extends React.Component {
+    static propTypes = {
         isOpen: React.PropTypes.bool.isRequired,
         blockchainState: React.PropTypes.instanceOf(BlockchainState).isRequired,
         toggleDialogFn: React.PropTypes.func.isRequired,
-    },
-    getInitialState() {
-        return {
+    }
+    constructor(props) {
+        super(props);
+        this.state = {
             request: this._getEmptyRequestFormMap(),
             requestFormErrMsgs: {
                 general: '',
                 ...this._getEmptyRequestFormMap(),
             },
         };
-    },
+    }
     render() {
         const dialogActions = [
             <FlatButton
@@ -65,7 +66,7 @@ const NewRequestDialog = React.createClass({
                 <div className="pt2">{this.state.requestFormErrMsgs.general}</div>
             </Dialog>
         );
-    },
+    }
     _getEmptyRequestFormMap() {
         return {
             requesterName: '',
@@ -73,7 +74,7 @@ const NewRequestDialog = React.createClass({
             customMessage: '',
             valentineAddress: '',
         };
-    },
+    }
     async _onRequestSubmitClickAsync() {
         const requestFormErrMsgs = this._getEmptyRequestFormMap();
         requestFormErrMsgs.general = '';
@@ -135,19 +136,19 @@ const NewRequestDialog = React.createClass({
                 request: this._getEmptyRequestFormMap(),
             });
         }
-    },
+    }
     _onKeyUp(e) {
         if (e.key === 'Enter') {
             this._onRequestSubmitClickAsync();
         }
-    },
+    }
     _onUpdateRequest(key, value) {
         const request = this.state.request;
         request[key] = value;
         this.setState({
             request,
         });
-    },
-});
+    }
+}
 
 export default NewRequestDialog;
