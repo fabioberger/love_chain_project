@@ -1,14 +1,12 @@
-const _ = require('lodash');
-const React = require('react');
-const Link = require('react-router').Link
-const RaisedButton = require('material-ui').RaisedButton;
-const Paper = require('material-ui').Paper;
-const BlockchainState = require('js/blockchain_state');
-const RequestFeed = require('js/components/sub_components/request_feed');
-const NewRequestDialog = require('js/components/sub_components/new_request_dialog');
-const AcceptRequestDialog = require('js/components/sub_components/accept_request_dialog');
-const Loading = require('js/components/sub_components/loading');
-const Error = require('js/components/sub_components/error');
+import _ from 'lodash';
+import React from 'react';
+import {RaisedButton, Paper} from 'material-ui';
+import BlockchainState from 'js/blockchain_state';
+import RequestFeed from 'js/components/sub_components/request_feed';
+import NewRequestDialog from 'js/components/sub_components/new_request_dialog';
+import AcceptRequestDialog from 'js/components/sub_components/accept_request_dialog';
+import Loading from 'js/components/sub_components/loading';
+import Error from 'js/components/sub_components/error';
 
 const Home = React.createClass({
     propTypes: {
@@ -94,4 +92,4 @@ const Home = React.createClass({
     },
 });
 
-module.exports = Home;
+export default Home;

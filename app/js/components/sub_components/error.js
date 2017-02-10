@@ -1,5 +1,5 @@
-const React = require('react');
-const Paper = require('material-ui').Paper;
+import React from 'react';
+import {Paper} from 'material-ui';
 
 const errorTypeToMessage = {
     NO_WEB3_INSTANCE_FOUND: (
@@ -49,4 +49,4 @@ const Error = props => {
     );
 };
 
-module.exports = Error;
+export default Error;

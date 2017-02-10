@@ -1,5 +1,5 @@
-const React = require('react');
-const Isvg = require('react-inlinesvg');
+import React from 'react';
+import Isvg from 'react-inlinesvg';
 
 const Loading = props => {
     return (
@@ -14,4 +14,4 @@ const Loading = props => {
     );
 }
 
-module.exports = Loading;
+export default Loading;

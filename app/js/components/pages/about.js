@@ -1,5 +1,4 @@
-const React = require('react');
-const Link = require('react-router').Link
+import React from 'react';
 
 const About = React.createClass({
     componentDidMount() {
@@ -14,4 +13,4 @@ const About = React.createClass({
     },
 });
 
-module.exports = About;
+export default About;

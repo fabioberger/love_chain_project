@@ -1,5 +1,6 @@
-const EventEmitter2 = require('eventemitter2').EventEmitter2;
-const assert = require('js/assert');
+import _ from 'lodash';
+import {EventEmitter2} from 'eventemitter2';
+import assert from 'js/assert';
 
 class Web3Wrapper extends EventEmitter2 {
     constructor(web3Instance) {
@@ -128,4 +129,4 @@ class Web3Wrapper extends EventEmitter2 {
     }
 }
 
-module.exports = Web3Wrapper;
+export default Web3Wrapper;

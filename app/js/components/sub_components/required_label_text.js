@@ -1,4 +1,4 @@
-const React = require('react');
+import React from 'react';
 
 const RequiredLabelText = props => {
     return (
@@ -9,4 +9,4 @@ const RequiredLabelText = props => {
     );
 }
 
-module.exports = RequiredLabelText;
+export default RequiredLabelText;

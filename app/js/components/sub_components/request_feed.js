@@ -1,7 +1,8 @@
-const React = require('react');
-const ReactCSSTransitionGroup = require('react-addons-css-transition-group');
-const BlockchainState = require('js/blockchain_state');
-const RequestFeedPost = require('js/components/sub_components/request_feed_post');
+import _ from 'lodash';
+import React from 'react';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import BlockchainState from 'js/blockchain_state';
+import RequestFeedPost from 'js/components/sub_components/request_feed_post';
 
 const RequestFeed = React.createClass({
     propTypes: {
@@ -37,4 +38,4 @@ const RequestFeed = React.createClass({
     },
 });
 
-module.exports = RequestFeed;
+export default RequestFeed;

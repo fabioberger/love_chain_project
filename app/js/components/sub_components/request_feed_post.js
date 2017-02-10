@@ -1,6 +1,6 @@
-const React = require('react');
-const Paper = require('material-ui').Paper;
-const colors = require('material-ui/styles').colors;
+import React from 'react';
+import {Paper} from 'material-ui';
+import {colors} from 'material-ui/styles';
 
 const RequestFeedPost = React.createClass({
     propTypes: {
@@ -48,4 +48,4 @@ const RequestFeedPost = React.createClass({
     },
 });
 
-module.exports = RequestFeedPost;
+export default RequestFeedPost;

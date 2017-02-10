@@ -1,6 +1,6 @@
-require('babel-polyfill')
-const _ = require('lodash');
-const Web3 = require('web3')
+require('babel-polyfill');
+import _ from 'lodash';
+const Web3 = require('web3');
 const web3 = new Web3();
 web3.setProvider(new Web3.providers.HttpProvider("http://localhost:8545"));
 

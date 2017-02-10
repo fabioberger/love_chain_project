@@ -1,12 +1,13 @@
-const Web3 = require('web3');
-const contract = require('truffle-contract');
-const deepEqual = require('deep-equal');
-const EventEmitter2 = require('eventemitter2').EventEmitter2;
-const utils = require('js/utils');
-const assert = require('js/assert');
-const ValentineRegistryArtifacts = require('../../build/contracts/ValentineRegistry.json');
-const Web3Wrapper = require('js/web3_wrapper');
-const ValentineRequests = require('js/valentine_requests');
+import _ from 'lodash';
+import Web3 from 'web3';
+import contract from 'truffle-contract';
+import deepEqual from 'deep-equal';
+import {EventEmitter2} from 'eventemitter2';
+import utils from 'js/utils';
+import assert from 'js/assert';
+import ValentineRegistryArtifacts from '../../build/contracts/ValentineRegistry.json';
+import Web3Wrapper from 'js/web3_wrapper';
+import ValentineRequests from 'js/valentine_requests';
 
 const NULL_ADDRESS = '0x0000000000000000000000000000000000000000';
 
@@ -128,6 +129,8 @@ class BlockchainState extends EventEmitter2 {
             try {
                 this._valentineRegistry = await valentineRegistry.deployed();
                 await this._getExistingRequestsAsync();
+                // this._kickoffFakeRequestAdds();
+                this._createFakeRequests(10);
                 this._startWatchingContractForEvents();
             } catch(err) {
                 const errMsg = `${err}`;
@@ -154,6 +157,45 @@ class BlockchainState extends EventEmitter2 {
             const request = this._convertRequestArrToObj(requestArr);
             this._valentineRequests.add(request);
         }
+    }
+    _getUniqueFakeAddress() {
+        const index = 2 + Math.floor((Math.random() * 39) + 1);
+        const letterIndex = Math.floor((Math.random() * 51) + 1);
+        const letters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const letter = letters[letterIndex];
+        let address = NULL_ADDRESS;
+        address = address.substr(0, index) + letter + address.substr(index+1);;
+        return address;
+    }
+    getFakeName(len) {
+        const letters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        let name = '';
+        _.times(len, () => {
+            const letterIndex = Math.floor((Math.random() * 51) + 1);
+            name += letters[letterIndex];
+        });
+        return name;
+    }
+    _createFakeRequests(num) {
+        _.times(num, () => {
+            this._createFakeRequest();
+        });
+    }
+    _kickoffFakeRequestAdds() {
+        setInterval(() => {
+            this._createFakeRequest();
+        }, 2000);
+    }
+    _createFakeRequest() {
+        const request = {
+            requesterName: this.getFakeName(10),
+            valentineName: this.getFakeName(12),
+            customMessage: this.getFakeName(20),
+            wasAccepted: false,
+            valentineAddress: NULL_ADDRESS,
+            requesterAddress: this._getUniqueFakeAddress(),
+        };
+        this._valentineRequests.add(request);
     }
     _startWatchingContractForEvents() {
         // Ensure we are only ever listening to one set of events
@@ -228,4 +270,4 @@ class BlockchainState extends EventEmitter2 {
     }
 }
 
-module.exports = BlockchainState;
+export default BlockchainState;

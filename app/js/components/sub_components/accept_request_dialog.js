@@ -1,9 +1,7 @@
-const React = require('react');
-const Dialog = require('material-ui').Dialog;
-const FlatButton = require('material-ui').FlatButton;
-const TextField = require('material-ui').TextField;
-const BlockchainState = require('js/blockchain_state');
-const RequiredLabelText = require('js/components/sub_components/required_label_text');
+import React from 'react';
+import {Dialog, FlatButton, TextField} from 'material-ui';
+import BlockchainState from 'js/blockchain_state';
+import RequiredLabelText from 'js/components/sub_components/required_label_text';
 
 const AcceptRequestDialog = React.createClass({
     propTypes: {
@@ -108,4 +106,4 @@ const AcceptRequestDialog = React.createClass({
     },
 });
 
-module.exports = AcceptRequestDialog;
+export default AcceptRequestDialog;

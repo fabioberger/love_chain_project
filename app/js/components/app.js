@@ -1,12 +1,10 @@
-const _ = require('lodash');
-const React = require('react');
-const classNames = require('classnames');
-const Link = require('react-router').Link
-const MuiThemeProvider = require('material-ui/styles').MuiThemeProvider;
-const getMuiTheme = require('material-ui/styles').getMuiTheme;
-const colors = require('material-ui/styles').colors;
-const utils = require('js/utils');
-const BlockchainState = require('js/blockchain_state');
+import _ from 'lodash';
+import React from 'react';
+import classNames from 'classnames';
+import {Link} from 'react-router';
+import {MuiThemeProvider, getMuiTheme, colors} from 'material-ui/styles';
+import utils from 'js/utils';
+import BlockchainState from 'js/blockchain_state';
 
 const App = React.createClass({
     componentWillMount() {
@@ -51,4 +49,4 @@ const App = React.createClass({
     },
 });
 
-module.exports = App;
+export default App;

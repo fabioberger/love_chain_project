@@ -1,27 +1,23 @@
-require("babel-polyfill");
-const React = require('react');
-const ReactDOM = require('react-dom');
-const Router = require('react-router').Router;
-const Route = require('react-router').Route;
-const IndexRoute = require('react-router').IndexRoute;
-const Link = require('react-router').Link;
-const hashHistory = require("react-router").hashHistory
-const App = require('js/components/app');
-const Home = require('js/components/pages/home');
-const About = require('js/components/pages/about');
-const injectTapEventPlugin = require('react-tap-event-plugin');
+import 'babel-polyfill';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import {Router, Route, IndexRoute, hashHistory} from 'react-router';
+import App from 'js/components/app';
+import Home from 'js/components/pages/home';
+import About from 'js/components/pages/about';
+import injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
 
-require('basscss/css/basscss.css');
-require('basscss-forms/index.css');
-require('basscss-btn/index.css');
-require('basscss-btn-outline/css/btn-outline.css');
-require('basscss-btn-primary/css/btn-primary.css');
-require('basscss-btn-sizes/css/btn-sizes.css');
-require('basscss-colors/css/colors.css');
-require('basscss-background-colors/css/background-colors.css');
-require('basscss-border-colors/css/border-colors.css');
-require('less/all.less');
+import 'basscss/css/basscss.css';
+import 'basscss-forms/index.css';
+import 'basscss-btn/index.css';
+import 'basscss-btn-outline/css/btn-outline.css';
+import 'basscss-btn-primary/css/btn-primary.css';
+import 'basscss-btn-sizes/css/btn-sizes.css';
+import 'basscss-colors/css/colors.css';
+import 'basscss-background-colors/css/background-colors.css';
+import 'basscss-border-colors/css/border-colors.css';
+import 'less/all.less';
 
 ReactDOM.render(
     <Router history={hashHistory}>

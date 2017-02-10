@@ -1,4 +1,4 @@
-const _ = require('lodash');
+import _ from 'lodash';
 
 const assert = (condition, message) => {
     if (!condition) {
@@ -18,4 +18,4 @@ assert.isObject = value => {
     assert(_.isObject(value), `Expected ${value} to be a object`);
 };
 
-module.exports = assert;
+export default assert;

@@ -1,5 +1,5 @@
-const _ = require('lodash');
-const assert = require('js/assert');
+import _ from 'lodash';
+import assert from 'js/assert';
 
 class ValentineRequests {
     constructor(onUpdatedFn) {
@@ -34,4 +34,4 @@ class ValentineRequests {
     }
 }
 
-module.exports = ValentineRequests;
+export default ValentineRequests;
