@@ -58,11 +58,19 @@ const AcceptRequestDialog = React.createClass({
         };
         const requesterAddress = this.state.form.requesterAddress;
 
+        const senderAddress = this.props.blockchainState.getFirstAccountIfExists();
+        const isSenderAddressAvailable = !_.isNull(senderAddress);
+        if (!isSenderAddressAvailable) {
+            acceptRequestFormErrMsgs.general = 'Your ethereum address was not found. web3.eth.accounts \
+            did not return any account addresses. If using Metamask, re-select an account and try \
+            again.';
+        }
+
         if (requesterAddress === '') {
             acceptRequestFormErrMsgs.requesterAddress = `requesterAddress is required`;
         } else if (!this.props.blockchainState.isValidAddress(requesterAddress)) {
             acceptRequestFormErrMsgs.requesterAddress = 'Must be a valid hex encoded ethereum address e.g 0xccd51...';
-        } else {
+        } else if (isSenderAddressAvailable) {
             const request = await this.props.blockchainState.getRequestIfExistsAsync(requesterAddress);
             if (!request) {
                 acceptRequestFormErrMsgs.general = 'There is no request associated with this address';

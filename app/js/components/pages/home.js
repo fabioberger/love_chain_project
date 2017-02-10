@@ -69,7 +69,7 @@ const Home = React.createClass({
                         disabled={hasBlockchainErr}
                         onTouchTap={() => this._newRequestDialogToggle(true)} />
                 </div>
-                <div className="m3" style={{backgroundColor: "#FFCDD2", height: "450px"}}>
+                <div className="m3 overflow-scroll" style={{backgroundColor: "#FFCDD2", height: "450px"}}>
                     {hasBlockchainErr ?
                         <Error type={this.props.blockchainState.getError()} /> :
                         <RequestFeed

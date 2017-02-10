@@ -22,6 +22,7 @@ const errorTypeToMessage = {
             Please make sure you are connected to the right network.
         </span>
     ),
+    UNHANDLED_ERROR: <span>An error occured. Please refresh.</span>,
 };
 
 const Error = props => {
@@ -35,7 +36,7 @@ const Error = props => {
     let errorNode = errorTypeToMessage[props.type];
     if (_.isUndefined(errorNode)) {
         console.log(`Error of type: ${props.type} not found in Error components errorTypeToMessage map`);
-        errorNode = 'An error occured. Please refresh.';
+        errorNode = errorTypeToMessage.UNHANDLED_ERROR;
     }
 
     return (

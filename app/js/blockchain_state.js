@@ -2,9 +2,11 @@ const Web3 = require('web3');
 const contract = require('truffle-contract');
 const deepEqual = require('deep-equal');
 const EventEmitter2 = require('eventemitter2').EventEmitter2;
+const utils = require('js/utils');
 const assert = require('js/assert');
 const ValentineRegistryArtifacts = require('../../build/contracts/ValentineRegistry.json');
 const Web3Wrapper = require('js/web3_wrapper');
+const ValentineRequests = require('js/valentine_requests');
 
 const NULL_ADDRESS = '0x0000000000000000000000000000000000000000';
 
@@ -17,9 +19,12 @@ class BlockchainState extends EventEmitter2 {
         this._wrappedWeb3 = null;
         this._networkId = null;
         this._valentineRegistry = null;
-        this._valentineRequests = {};
+        this._valentineRequests = new ValentineRequests(this._onValentineRequestsUpdated.bind(this));
         this._logValentineRequestCreated = null;
         this._logRequestAccepted = null;
+        this._eventNames = utils.keyWords([
+            'valentineRequestsUpdated',
+        ]);
         this._onPageLoadInitFireAndForgetAsync();
     }
     hasError() {
@@ -36,10 +41,13 @@ class BlockchainState extends EventEmitter2 {
         return this._wrappedWeb3.call('isAddress', lowercaseAddress);
     }
     getValentineRequests() {
-        return _.map(this._valentineRequests, (request, requesterAddress) => request);
+        return this._valentineRequests.getAll();
     }
     isRequestTargetedAtUser(valentineAddress) {
-        return valentineAddress === this._wrappedWeb3.getFirstAccount() || valentineAddress === NULL_ADDRESS;
+        return valentineAddress === this._wrappedWeb3.getFirstAccountIfExists() || valentineAddress === NULL_ADDRESS;
+    }
+    getFirstAccountIfExists() {
+        return this._wrappedWeb3.getFirstAccountIfExists();
     }
     async createValentineRequestFireAndForgetAsync(requesterName, valentineName, customMessage, valentineAddress) {
         assert.isString(requesterName);
@@ -48,8 +56,11 @@ class BlockchainState extends EventEmitter2 {
         assert(this.isValidAddress(valentineAddress) || _.isEmpty(valentineAddress), 'valentineAddress \
         must either be a valid ethereum address or an empty string');
 
+        const requesterAddress = this._wrappedWeb3.getFirstAccountIfExists();
+        assert(!_.isNull(requesterAddress), 'requesterAddress must be available for a transaction to be sent.');
+
         const requestOpts = {
-            from: this._wrappedWeb3.getFirstAccount(),
+            from: requesterAddress,
             value: this._wrappedWeb3.call('toWei', 0.1, 'ether'),
         }
         if (_.isEmpty(valentineAddress)) {
@@ -63,12 +74,18 @@ class BlockchainState extends EventEmitter2 {
     async acceptValentineRequestAsync(requesterAddress) {
         assert(this.isValidAddress(requesterAddress), 'requesterAddress must be valid ethereum address');
 
+        const valentineRequest = this._wrappedWeb3.getFirstAccountIfExists();
+        assert(!_.isNull(valentineRequest), 'valentineRequest must be available for a transaction to be sent.');
+
         await this._valentineRegistry.acceptValentineRequest(requesterAddress, {
-            from: this._wrappedWeb3.getFirstAccount(),
+            from: valentineRequest,
         });
     }
     async didRequesterAlreadyRequestAsync() {
-        const request = await this.getRequestIfExistsAsync(this._wrappedWeb3.getFirstAccount());
+        const requesterAddress = this._wrappedWeb3.getFirstAccountIfExists();
+        assert(!_.isNull(requesterAddress), 'requesterAddress must exist to check for existing requests.');
+
+        const request = await this.getRequestIfExistsAsync(requesterAddress);
         return !_.isNull(request);
     }
     async getRequestIfExistsAsync(address) {
@@ -106,16 +123,21 @@ class BlockchainState extends EventEmitter2 {
         this._networkId = await this._wrappedWeb3.getNetworkIdIfExists();
         const doesNetworkExist = !_.isNull(this._networkId);
         if (doesNetworkExist) {
-            // instantial contract instance
             const valentineRegistry = await contract(ValentineRegistryArtifacts);
             valentineRegistry.setProvider(this._wrappedWeb3.get('currentProvider'));
             try {
-                this._valentineRegistry = await valentineRegistry.deployed().then();
-                // hydrate existing valentine requests
-                this._valentineRequests = await this._getExistingRequestsAsync();
+                this._valentineRegistry = await valentineRegistry.deployed();
+                await this._getExistingRequestsAsync();
                 this._startWatchingContractForEvents();
             } catch(err) {
-                this._err = 'CONTRACT_NOT_DEPLOYED_ON_NETWORK';
+                const errMsg = `${err}`;
+                if (_.includes(errMsg, 'not been deployed to detected network')) {
+                    this._err = 'CONTRACT_NOT_DEPLOYED_ON_NETWORK';
+                } else {
+                    // We show a generic message for other possible caught errors
+                    console.log('Unhandled error encountered: ', err);
+                    this._err = 'UNHANDLED_ERROR';
+                }
             }
         } else {
             this._err = 'DISCONNECTED_FROM_ETHEREUM_NODE';
@@ -124,14 +146,14 @@ class BlockchainState extends EventEmitter2 {
         this._onUpdatedFn();
     }
     async _getExistingRequestsAsync() {
-        const requests = {};
+        this._valentineRequests.clearAll();
+
         const numRequesters = await this._valentineRegistry.numRequesters.call();
         for(let i = 0; i < numRequesters.toNumber(); i++) {
             const requestArr = await this._valentineRegistry.getRequestByIndex.call(i);
             const request = this._convertRequestArrToObj(requestArr);
-            requests[request.requesterAddress] = request;
+            this._valentineRequests.add(request);
         }
-        return requests;
     }
     _startWatchingContractForEvents() {
         // Ensure we are only ever listening to one set of events
@@ -151,10 +173,9 @@ class BlockchainState extends EventEmitter2 {
             const request = result.args;
             request.wasAccepted = false;
 
-            if (!this._valentineRequests[request.requesterAddress]) {
-                this._valentineRequests[request.requesterAddress] = request;
+            if (!this._valentineRequests.has(request.requesterAddress)) {
+                this._valentineRequests.add(request);
             }
-            this.emit('eventReceived');
         });
 
         this._logRequestAccepted = this._valentineRegistry.LogRequestAccepted({}, 'latest');
@@ -165,10 +186,9 @@ class BlockchainState extends EventEmitter2 {
             }
             const eventData = result.args;
 
-            if (this._valentineRequests[eventData.requesterAddress]) {
-                this._valentineRequests[eventData.requesterAddress].wasAccepted = true;
+            if (this._valentineRequests.has(eventData.requesterAddress)) {
+                this._valentineRequests.update(eventData.requesterAddress, 'wasAccepted', true);
             }
-            this.emit('eventReceived');
         });
     }
     async _networkConnectionChangedAsync(networkIdIfExists) {
@@ -202,6 +222,9 @@ class BlockchainState extends EventEmitter2 {
     _doesRequestExist(request) {
         const emptyRequestArr = ['', '', '', false, NULL_ADDRESS, NULL_ADDRESS];
         return !deepEqual(request, this._convertRequestArrToObj(emptyRequestArr));
+    }
+    _onValentineRequestsUpdated() {
+        this.emit(this._eventNames.valentineRequestsUpdated);
     }
 }
 

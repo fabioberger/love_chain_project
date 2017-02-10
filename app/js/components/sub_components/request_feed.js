@@ -8,10 +8,10 @@ const RequestFeed = React.createClass({
         blockchainState: React.PropTypes.instanceOf(BlockchainState).isRequired,
     },
     componentDidMount() {
-        this.props.blockchainState.on('eventReceived', this.forceUpdate.bind(this));
+        this.props.blockchainState.on('valentineRequestsUpdated', this.forceUpdate.bind(this));
     },
-    componentWillMount() {
-        this.props.blockchainState.removeListener('eventReceived', this.forceUpdate.bind(this));
+    componentWillUnMount() {
+        this.props.blockchainState.removeListener('valentineRequestsUpdated', this.forceUpdate.bind(this));
     },
     render() {
         return (

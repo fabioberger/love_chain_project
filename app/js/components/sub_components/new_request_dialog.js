@@ -106,9 +106,17 @@ const NewRequestDialog = React.createClass({
             requestFormErrMsgs.valentineAddress = 'Must be a valid hex encoded ethereum address e.g 0xccd51...';
         }
 
-        const doesExistingRequestExist = await this.props.blockchainState.didRequesterAlreadyRequestAsync();
-        if (doesExistingRequestExist) {
-            requestFormErrMsgs.general = 'You can only send one valentine request per account.';
+        const senderAddress = this.props.blockchainState.getFirstAccountIfExists();
+        const isSenderAddressAvailable = !_.isNull(senderAddress);
+        if (!isSenderAddressAvailable) {
+            requestFormErrMsgs.general = 'Your ethereum address was not found. web3.eth.accounts \
+            did not return any account addresses. If using Metamask, re-select an account and try \
+            again.';
+        } else {
+            const doesExistingRequestExist = await this.props.blockchainState.didRequesterAlreadyRequestAsync();
+            if (doesExistingRequestExist) {
+                requestFormErrMsgs.general = 'You can only send one valentine request per account.';
+            }
         }
 
         let hasErrors = false;

@@ -28,8 +28,12 @@ class Web3Wrapper extends EventEmitter2 {
     doesExist() {
         return !_.isNull(this._web3);
     }
-    getFirstAccount() {
-        return this._web3.eth.accounts[0]
+    getFirstAccountIfExists() {
+        const address = this._web3.eth.accounts[0];
+        if (_.isUndefined(address)) {
+            return null;
+        }
+        return address;
     }
     async getNetworkIdIfExists() {
         if (!this.doesExist()) {

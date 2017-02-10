@@ -14,4 +14,8 @@ assert.isFunction = value => {
     assert(_.isFunction(value), `Expected ${value} to be a function`);
 };
 
+assert.isObject = value => {
+    assert(_.isObject(value), `Expected ${value} to be a object`);
+};
+
 module.exports = assert;
