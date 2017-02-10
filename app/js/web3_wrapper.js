@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import {EventEmitter2} from 'eventemitter2';
-import assert from 'js/assert';
+import assert from 'js/utils/assert';
 
 class Web3Wrapper extends EventEmitter2 {
     constructor(web3Instance) {

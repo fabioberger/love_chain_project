@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import assert from 'js/assert';
+import assert from 'js/utils/assert';
 
 class ValentineRequests {
     constructor(onUpdatedFn) {

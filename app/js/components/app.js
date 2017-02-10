@@ -3,7 +3,7 @@ import React from 'react';
 import classNames from 'classnames';
 import {Link} from 'react-router';
 import {MuiThemeProvider, getMuiTheme, colors} from 'material-ui/styles';
-import utils from 'js/utils';
+import utils from 'js/utils/utils';
 import BlockchainState from 'js/blockchain_state';
 
 class App extends React.Component {
