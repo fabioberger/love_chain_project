@@ -56,19 +56,25 @@ class Home extends React.Component {
 
         return (
             <div>
-                <div className="pl2 pr2 pt3 clearfix" style={{height: '37px'}}>
-                <RaisedButton
-                    label="Accept Valentine Request"
-                    className="mr2 right"
-                    disabled={hasBlockchainErr}
-                    onTouchTap={() => this._acceptRequestDialogToggle(true)} />
-                <RaisedButton
-                    label="Send Valentine Request"
-                    className="ml2 left"
-                    disabled={hasBlockchainErr}
-                    onTouchTap={() => this._newRequestDialogToggle(true)} />
+                <div className="pl2 pr2 pt3 clearfix">
+                    <RaisedButton
+                        label="Accept Valentine Request"
+                        className="mr2 right"
+                        disabled={hasBlockchainErr}
+                        onTouchTap={() => this._acceptRequestDialogToggle(true)} />
+                    <div className="inline-block">
+                        <div>
+                            <img style={{width: '50px'}} src="imgs/ethereum_icon.png" />
+                        </div>
+                        <div className="h5">Hosted on Ethereum</div>
+                    </div>
+                    <RaisedButton
+                        label="Send Valentine Request"
+                        className="ml2 left"
+                        disabled={hasBlockchainErr}
+                        onTouchTap={() => this._newRequestDialogToggle(true)} />
                 </div>
-                <div className="m3 overflow-scroll" style={{backgroundColor: "#FFCDD2", height: "530px"}}>
+                <div className="mx3 mt2 mb3 overflow-scroll" style={{backgroundColor: "#FFCDD2", height: "530px"}}>
                     {hasBlockchainErr ?
                         <Error type={this.props.blockchainState.getError()} /> :
                         <RequestFeed blockchainState={this.props.blockchainState} />

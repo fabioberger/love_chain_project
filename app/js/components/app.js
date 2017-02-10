@@ -27,15 +27,17 @@ class App extends React.Component {
             },
         });
 
-        const contentClassNames = classNames("mx-auto", "max-width-3");
+        const contentClassNames = classNames("mx-auto", "max-width-4");
         return (
             <MuiThemeProvider muiTheme={muiTheme}>
                 <div>
-                    <div className="topBar clearfix">
-                        <div className="logo" style={{fontFamily: 'Pacifico, cursive'}}>
+                    <div className="center clearfix">
+                        <div className="h1" style={{fontFamily: 'Pacifico, cursive'}}>
                             <Link className="text-decoration-none white-text" to="/">Happy Crypto Valetines Day!</Link>
                         </div>
-                        <div className="white-text p2">Declare your love immutably on the Ethereum blockchain</div>
+                        <div className="white-text p2">
+                            Declare your love immutably on the blockchain
+                        </div>
                     </div>
                     <div className={contentClassNames}>
                         <div className="clearfix">
