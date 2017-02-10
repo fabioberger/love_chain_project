@@ -15,6 +15,10 @@ class RequestFeed extends React.Component {
         this.props.blockchainState.removeListener('valentineRequestsUpdated', this.forceUpdate.bind(this));
     }
     render() {
+        // Warning: do not edit these constants without also editing their corresponding values in
+        // request_feed.less
+        const transitionEnterTimeout = 1000;
+        const transitionLeaveTimeout = 300;
         return (
             <ReactCSSTransitionGroup
                 transitionName="feed"
