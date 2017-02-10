@@ -6,7 +6,26 @@ const faker = {
         return fakerPackage.Name.firstName().substr(0, 25);
     },
     getCustomMessage() {
-        return fakerPackage.Lorem.sentences().substr(0, 140);
+        // return fakerPackage.Lorem.sentences().substr(0, 140);
+        const customMessages = [
+            'I love you!',
+            'Thanks for being a part of my life...',
+            'Te quiero mucho mucho mucho querido!!!',
+            'Ever since I first saw you, I knew you were the one for me. Can\'t believe it\'s been \
+            2 years already. Looking forward to the next one aswell!',
+            'Thanks for making me the person that I am today. Love you so much!',
+            'Je t\'aime mon amour. Tu me fait tellement heureuse, j\'ai envie de te revoir bientot!',
+            'Oi amor! Feliz dia dos Namorados! Agora nosso amor e enscrito eternamente no blockchain. Te amo',
+            'You are the best',
+            'Be my valentine?',
+            'You are all I need on this valentines... Just wait until you see the surprise at home :)',
+            'Happy valentine!',
+            'Our love is now immutable',
+            'Seit du in meiner leben eigetreten bist, bin is so glucklich. Danke',
+            'Miss you my love',
+        ];
+        const messageIndex = Math.floor((Math.random() * customMessages.length - 1) + 1);
+        return customMessages[messageIndex];
     },
     getEtherAddress() {
         // Warning: this uses javascript's Math.random() method and is therefore not cryptographically
