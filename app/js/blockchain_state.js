@@ -8,6 +8,7 @@ import assert from 'js/utils/assert';
 import ValentineRegistryArtifacts from '../../build/contracts/ValentineRegistry.json';
 import Web3Wrapper from 'js/web3_wrapper';
 import ValentineRequests from 'js/valentine_requests';
+import faker from 'js/utils/faker';
 
 const NULL_ADDRESS = '0x0000000000000000000000000000000000000000';
 
@@ -129,7 +130,7 @@ class BlockchainState extends EventEmitter2 {
             try {
                 this._valentineRegistry = await valentineRegistry.deployed();
                 await this._getExistingRequestsAsync();
-                // this._kickoffFakeRequestAdds();
+                this._kickoffFakeRequestAdds();
                 this._createFakeRequests(10);
                 this._startWatchingContractForEvents();
             } catch(err) {
@@ -158,44 +159,17 @@ class BlockchainState extends EventEmitter2 {
             this._valentineRequests.add(request);
         }
     }
-    _getUniqueFakeAddress() {
-        const index = 2 + Math.floor((Math.random() * 39) + 1);
-        const letterIndex = Math.floor((Math.random() * 51) + 1);
-        const letters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        const letter = letters[letterIndex];
-        let address = NULL_ADDRESS;
-        address = address.substr(0, index) + letter + address.substr(index+1);;
-        return address;
-    }
-    getFakeName(len) {
-        const letters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        let name = '';
-        _.times(len, () => {
-            const letterIndex = Math.floor((Math.random() * 51) + 1);
-            name += letters[letterIndex];
-        });
-        return name;
-    }
     _createFakeRequests(num) {
         _.times(num, () => {
-            this._createFakeRequest();
+            const request = faker.createRequest();
+            this._valentineRequests.add(request);
         });
     }
     _kickoffFakeRequestAdds() {
         setInterval(() => {
-            this._createFakeRequest();
+            const request = faker.createRequest();
+            this._valentineRequests.add(request);
         }, 2000);
-    }
-    _createFakeRequest() {
-        const request = {
-            requesterName: this.getFakeName(10),
-            valentineName: this.getFakeName(12),
-            customMessage: this.getFakeName(20),
-            wasAccepted: false,
-            valentineAddress: NULL_ADDRESS,
-            requesterAddress: this._getUniqueFakeAddress(),
-        };
-        this._valentineRequests.add(request);
     }
     _startWatchingContractForEvents() {
         // Ensure we are only ever listening to one set of events

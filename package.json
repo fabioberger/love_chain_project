@@ -8,6 +8,7 @@
     "dev": "webpack-dev-server --content-base app/public"
   },
   "dependencies": {
+    "Faker": "^0.7.2",
     "basscss": "^8.0.2",
     "classnames": "^2.2.5",
     "deep-equal": "^1.0.1",
