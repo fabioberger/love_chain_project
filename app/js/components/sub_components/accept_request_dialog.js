@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React from 'react';
 import {Dialog, FlatButton, TextField} from 'material-ui';
 import BlockchainState from 'js/blockchain_state';
@@ -40,7 +41,7 @@ class AcceptRequestDialog extends React.Component {
                     errorText={this.state.acceptRequestFormErrMsgs.requesterAddress}
                     value={this.state.form.requesterAddress}
                     onChange={e => this._onUpdateForm('requesterAddress', e.target.value)}
-                    onKeyUp={this._onKeyUp} />
+                    onKeyUp={this._onKeyUp.bind(this)} />
                 <div className="pt2">{this.state.acceptRequestFormErrMsgs.general}</div>
             </Dialog>
         );

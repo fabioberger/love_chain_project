@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React from 'react';
 import {Dialog, FlatButton, TextField} from 'material-ui';
 import BlockchainState from 'js/blockchain_state';
@@ -25,7 +26,7 @@ class NewRequestDialog extends React.Component {
                 label="Create"
                 primary={true}
                 keyboardFocused={true}
-                onTouchTap={this._onRequestSubmitClickAsync} />,
+                onTouchTap={this._onRequestSubmitClickAsync.bind(this)} />,
         ];
 
         return (
@@ -62,7 +63,7 @@ class NewRequestDialog extends React.Component {
                     errorText={this.state.requestFormErrMsgs.valentineAddress}
                     value={this.state.request.valentineAddress}
                     onChange={e => this._onUpdateRequest('valentineAddress', e.target.value)}
-                    onKeyUp={this._onKeyUp} />
+                    onKeyUp={this._onKeyUp.bind(this)} />
                 <div className="pt2">{this.state.requestFormErrMsgs.general}</div>
             </Dialog>
         );

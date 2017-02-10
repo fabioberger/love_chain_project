@@ -79,11 +79,11 @@ class Home extends React.Component {
                         <NewRequestDialog
                             isOpen={this.state.isNewRequestDialogOpen}
                             blockchainState={this.props.blockchainState}
-                            toggleDialogFn={this._newRequestDialogToggle} />
+                            toggleDialogFn={this._newRequestDialogToggle.bind(this)} />
                         <AcceptRequestDialog
                             isOpen={this.state.isAcceptRequestDialogOpen}
                             blockchainState={this.props.blockchainState}
-                            toggleDialogFn={this._acceptRequestDialogToggle} />
+                            toggleDialogFn={this._acceptRequestDialogToggle.bind(this)} />
                     </div>
                 }
 
