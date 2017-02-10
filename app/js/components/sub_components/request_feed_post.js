@@ -38,9 +38,13 @@ class RequestFeedPost extends React.Component {
                     </div>
                 </div>
                 <div
-                    className="p1"
-                    style={{fontFamily: 'Caveat Brush, cursive', fontSize: '22px'}}>
-                    {`"${this.props.customMessage}"`}
+                    className="p1 relative center"
+                    style={{fontFamily: 'Caveat Brush, cursive', fontSize: '22px', height: '54px'}}>
+                    <div
+                        className="absolute"
+                        style={{top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '85%'}} >
+                        {`"${this.props.customMessage}"`}
+                    </div>
                 </div>
                 <div className="pb1">- {this.props.requesterName} ({this.props.requesterAddress})</div>
             </Paper>
