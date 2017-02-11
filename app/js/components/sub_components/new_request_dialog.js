@@ -2,6 +2,7 @@ import _ from 'lodash';
 import React from 'react';
 import {Dialog, FlatButton, TextField} from 'material-ui';
 import BlockchainState from 'js/blockchain_state';
+import HelpTooltip from 'js/components/sub_components/help_tooltip';
 import RequiredLabelText from 'js/components/sub_components/required_label_text';
 
 class NewRequestDialog extends React.Component {
@@ -28,6 +29,8 @@ class NewRequestDialog extends React.Component {
                 keyboardFocused={true}
                 onTouchTap={this._onRequestSubmitClickAsync.bind(this)} />,
         ];
+        const valentineAddressExplanation = 'If you specify your valentine\'s address here, only \
+            they will be able to accept your request. Otherwise, anyone can accept it.';
 
         return (
             <Dialog
@@ -58,12 +61,16 @@ class NewRequestDialog extends React.Component {
                     value={this.state.request.customMessage}
                     onChange={e => this._onUpdateRequest('customMessage', e.target.value)} />
                 <br />
-                <TextField
-                    floatingLabelText="Your valentine's ethereum address"
-                    errorText={this.state.requestFormErrMsgs.valentineAddress}
-                    value={this.state.request.valentineAddress}
-                    onChange={e => this._onUpdateRequest('valentineAddress', e.target.value)}
-                    onKeyUp={this._onKeyUp.bind(this)} />
+                <span>
+                    <TextField
+                        floatingLabelText="Your valentine's ethereum address"
+                        errorText={this.state.requestFormErrMsgs.valentineAddress}
+                        value={this.state.request.valentineAddress}
+                        onChange={e => this._onUpdateRequest('valentineAddress', e.target.value)}
+                        onKeyUp={this._onKeyUp.bind(this)} />
+                    {' '}
+                    <HelpTooltip explanation={valentineAddressExplanation} />
+                </span>
                 <div className="pt2">{this.state.requestFormErrMsgs.general}</div>
             </Dialog>
         );
