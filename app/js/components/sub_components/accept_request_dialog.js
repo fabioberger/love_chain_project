@@ -26,7 +26,7 @@ class AcceptRequestDialog extends React.Component {
                 label="Accept"
                 primary={true}
                 keyboardFocused={true}
-                onTouchTap={this._onAcceptRequestClickAsync} />,
+                onTouchTap={this._onAcceptRequestClickAsync.bind(this)} />,
         ];
 
         return (
@@ -42,7 +42,7 @@ class AcceptRequestDialog extends React.Component {
                     value={this.state.form.requesterAddress}
                     onChange={e => this._onUpdateForm('requesterAddress', e.target.value)}
                     onKeyUp={this._onKeyUp.bind(this)} />
-                <div className="pt2">{this.state.acceptRequestFormErrMsgs.general}</div>
+                <div className="pt3">{this.state.acceptRequestFormErrMsgs.general}</div>
             </Dialog>
         );
     }

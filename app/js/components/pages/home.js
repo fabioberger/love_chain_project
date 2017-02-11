@@ -30,13 +30,45 @@ class Home extends React.Component {
             display: 'inline-block',
         };
 
+        const isLoaded = this.props.blockchainState.isLoaded();
+        const hasBlockchainErr = this.props.blockchainState.hasError();
         return (
             <Paper style={style} zDepth={3}>
-                {!this.props.blockchainState.isLoaded() ?
-                    <div className="pt4">
-                        <Loading message="Connecting to the blockchain..." />
-                    </div> :
-                    this._renderValentineFeed()
+                <div className="pl2 pr2 pt3 clearfix">
+                    <div className="inline-block hostedBadge">
+                        <div>
+                            <img style={{width: '50px'}} src="imgs/ethereum_icon.png" />
+                        </div>
+                        <div className="h5">Hosted on Ethereum</div>
+                    </div>
+                    <RaisedButton
+                        label="Send Valentine Request"
+                        className="ml2 left acceptButton"
+                        disabled={!isLoaded || hasBlockchainErr}
+                        onTouchTap={() => this._newRequestDialogToggle(true)} />
+                    <RaisedButton
+                        label="Accept Valentine Request"
+                        className="mr2 right sendButton"
+                        disabled={!isLoaded || hasBlockchainErr}
+                        onTouchTap={() => this._acceptRequestDialogToggle(true)} />
+                </div>
+                <div className="mx3 p3 mt3 mb3 overflow-scroll relative" style={{backgroundColor: "#FFCDD2", height: "530px"}}>
+                    {!isLoaded ?
+                        <Loading message="Connecting to the blockchain..." /> :
+                        this._renderValentineFeed(hasBlockchainErr)
+                    }
+                </div>
+                {(isLoaded && !hasBlockchainErr) &&
+                    <div>
+                        <NewRequestDialog
+                            isOpen={this.state.isNewRequestDialogOpen}
+                            blockchainState={this.props.blockchainState}
+                            toggleDialogFn={this._newRequestDialogToggle.bind(this)} />
+                        <AcceptRequestDialog
+                            isOpen={this.state.isAcceptRequestDialogOpen}
+                            blockchainState={this.props.blockchainState}
+                            toggleDialogFn={this._acceptRequestDialogToggle.bind(this)} />
+                    </div>
                 }
             </Paper>
         );
@@ -51,48 +83,13 @@ class Home extends React.Component {
             isAcceptRequestDialogOpen: isOpen,
         });
     }
-    _renderValentineFeed() {
-        const hasBlockchainErr = this.props.blockchainState.hasError();
-
+    _renderValentineFeed(hasBlockchainErr) {
         return (
             <div>
-                <div className="pl2 pr2 pt3 clearfix">
-                    <RaisedButton
-                        label="Accept Valentine Request"
-                        className="mr2 right"
-                        disabled={hasBlockchainErr}
-                        onTouchTap={() => this._acceptRequestDialogToggle(true)} />
-                    <div className="inline-block">
-                        <div>
-                            <img style={{width: '50px'}} src="imgs/ethereum_icon.png" />
-                        </div>
-                        <div className="h5">Hosted on Ethereum</div>
-                    </div>
-                    <RaisedButton
-                        label="Send Valentine Request"
-                        className="ml2 left"
-                        disabled={hasBlockchainErr}
-                        onTouchTap={() => this._newRequestDialogToggle(true)} />
-                </div>
-                <div className="mx3 mt2 mb3 overflow-scroll" style={{backgroundColor: "#FFCDD2", height: "530px"}}>
-                    {hasBlockchainErr ?
-                        <Error type={this.props.blockchainState.getError()} /> :
-                        <RequestFeed blockchainState={this.props.blockchainState} />
-                    }
-                </div>
-                {!hasBlockchainErr &&
-                    <div>
-                        <NewRequestDialog
-                            isOpen={this.state.isNewRequestDialogOpen}
-                            blockchainState={this.props.blockchainState}
-                            toggleDialogFn={this._newRequestDialogToggle.bind(this)} />
-                        <AcceptRequestDialog
-                            isOpen={this.state.isAcceptRequestDialogOpen}
-                            blockchainState={this.props.blockchainState}
-                            toggleDialogFn={this._acceptRequestDialogToggle.bind(this)} />
-                    </div>
+                {hasBlockchainErr ?
+                    <Error type={this.props.blockchainState.getError()} /> :
+                    <RequestFeed blockchainState={this.props.blockchainState} />
                 }
-
             </div>
         );
     }

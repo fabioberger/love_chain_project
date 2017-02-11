@@ -37,7 +37,8 @@ class RequestFeed extends React.Component {
                 valentineName={request.valentineName}
                 customMessage={request.customMessage}
                 wasAccepted={request.wasAccepted}
-                requesterAddress={request.requesterAddress} />
+                requesterAddress={request.requesterAddress}
+                valentineAddress={request.valentineAddress} />
         });
     }
 }

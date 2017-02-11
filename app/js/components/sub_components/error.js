@@ -6,20 +6,20 @@ const errorTypeToMessage = {
     NO_WEB3_INSTANCE_FOUND: (
         <span>
             We did not find a web3 instance on the page. Install{' '}
-            <a href="https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=en">
+            <a target="_blank" href="https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=en">
                 Metamask
-            </a> or visit this page in the <a href="https://github.com/ethereum/mist/releases">Mist browser</a>.
+            </a> or visit this page in the <a target="_blank" href="https://github.com/ethereum/mist/releases">Mist browser</a>.
         </span>
     ),
     DISCONNECTED_FROM_ETHEREUM_NODE: (
         <span>
-            Hm... looks like the backing ethereum node went offline. Try switching networks in Metamask
+            Hm... looks like the backing ethereum node is offline. Try switching networks in Metamask
             or double check that your local node is still running.
         </span>
     ),
     CONTRACT_NOT_DEPLOYED_ON_NETWORK: (
         <span>
-            The ValentineRegistry contract was not deployed on the Ethereum network you are connected to.
+            The ValentineRegistry contract was not deployed to the Ethereum network you are connected to.
             Please make sure you are connected to the right network.
         </span>
     ),
@@ -27,11 +27,17 @@ const errorTypeToMessage = {
 };
 
 const Error = props => {
+    const centerStyling = {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+    };
+
     const style = {
+        position: 'relative',
         height: 200,
-        width: '70%',
-        margin: '7rem',
-        display: 'inline-block',
+        ...centerStyling,
     };
 
     let errorNode = errorTypeToMessage[props.type];
@@ -42,10 +48,12 @@ const Error = props => {
 
     return (
         <Paper
+            className="errorPaper"
             style={style}
-            className="p4"
             zDepth={1} >
-            {errorNode}
+            <div style={{width: '90%', ...centerStyling}}>
+                {errorNode}
+            </div>
         </Paper>
     );
 };

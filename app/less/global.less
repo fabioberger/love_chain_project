@@ -6,6 +6,70 @@ body {
     font-family: 'Roboto', sans-serif;
 }
 
+svg {
+    // Apply the parent elements color to the SVG
+    fill: currentColor;
+}
+
 .white-text {
     color: @white;
+}
+
+// Loading component
+.loadingPaper {
+    width: 400px;
+    height: 200px;
+}
+
+// Error component
+.errorPaper {
+    width: 40%;
+}
+
+// CopyableAddress component
+.copyableAddressAddress {
+    width: 320px;
+}
+
+@media (max-width: 40em) {
+    .xsm-h1 {
+        font-size: 28px;
+    }
+
+    .sendButton {
+        float: none;
+        margin-top: 0.5rem;
+        width: 90%;
+        margin-right: 0;
+    }
+
+    .acceptButton {
+        float: none;
+        width: 90%;
+        margin-left: 0;
+    }
+
+    .hostedBadge {
+        display: block;
+        padding-bottom: 1rem;
+    }
+
+    // Loading component
+    .loadingPaper {
+        width: 300px;
+        height: 150px;
+    }
+
+    // Error component
+    .errorPaper {
+        width: 90%;
+    }
+
+    // CopyableAddress component
+    .copyableAddressAddress {
+        width: 65px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 }

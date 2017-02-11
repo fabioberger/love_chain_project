@@ -1,3 +1,5 @@
+const NULL_ADDRESS = '0x0000000000000000000000000000000000000000';
+
 const utils = {
     keyWords(words) {
         const keywords = {};
@@ -6,6 +8,9 @@ const utils = {
         }
         return keywords;
     },
+    isNullAddress(address) {
+        return address === NULL_ADDRESS;
+    },
 };
 
-export default utils;
+export { utils as default, NULL_ADDRESS };

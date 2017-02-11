@@ -3,14 +3,13 @@ import Web3 from 'web3';
 import contract from 'truffle-contract';
 import deepEqual from 'deep-equal';
 import {EventEmitter2} from 'eventemitter2';
-import utils from 'js/utils/utils';
+import {default as utils, NULL_ADDRESS} from 'js/utils/utils';
 import assert from 'js/utils/assert';
 import ValentineRegistryArtifacts from '../../build/contracts/ValentineRegistry.json';
 import Web3Wrapper from 'js/web3_wrapper';
 import ValentineRequests from 'js/valentine_requests';
 import faker from 'js/utils/faker';
 
-const NULL_ADDRESS = '0x0000000000000000000000000000000000000000';
 
 class BlockchainState extends EventEmitter2 {
     constructor(onUpdatedFn) {

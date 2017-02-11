@@ -5,6 +5,10 @@ const faker = {
     getFirstName() {
         return fakerPackage.Name.firstName().substr(0, 25);
     },
+    getWasAccepted() {
+        const wasAccepted = !!Math.floor((Math.random() * 2));
+        return wasAccepted;
+    },
     getCustomMessage() {
         // return fakerPackage.Lorem.sentences().substr(0, 140);
         const customMessages = [
@@ -30,11 +34,11 @@ const faker = {
     getEtherAddress() {
         // Warning: this uses javascript's Math.random() method and is therefore not cryptographically
         // secure. Only use these ether addresses for fake data purposes!
-        const letters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
         let address = '0x';
         _.times(40, () => {
-            const characterIndex = Math.floor((Math.random() * 61) + 1);
-            const character = letters[characterIndex];
+            const characterIndex = Math.floor((Math.random() * (characters.length - 1)) + 1);
+            const character = characters[characterIndex];
             address += character;
         })
         return address;
@@ -44,7 +48,7 @@ const faker = {
             requesterName: this.getFirstName(),
             valentineName: this.getFirstName(),
             customMessage: this.getCustomMessage(),
-            wasAccepted: false,
+            wasAccepted: this.getWasAccepted(),
             valentineAddress: this.getEtherAddress(),
             requesterAddress: this.getEtherAddress(),
         };

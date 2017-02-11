@@ -1,10 +1,16 @@
-/*
- * Request Feed Animations styles
- */
+@feedPostTransitionEnterTimeout: 1000ms;
+@feedPathTransitionLeaveTimeout: 300ms;
+@feedPostHeight: 126px;
 
- @feedPostHeight: 124px;
- @transitionEnterTimeout: 1000ms;
- @transitionLeaveTimeout: 300ms;
+.customMessage {
+    height: 54px;
+}
+
+@media (max-width: 40em) {
+    .customMessage {
+        height: 116px;
+    }
+}
 
 .feed-enter {
   opacity: 0.01;
@@ -14,8 +20,8 @@
 .feed-enter.feed-enter-active {
   opacity: 1;
   height: @feedPostHeight;
-  transition: opacity  @transitionEnterTimeout ease-in;
-  transition: height  @transitionEnterTimeout ease-in;
+  transition: opacity  @feedPostTransitionEnterTimeout ease-in;
+  transition: height  @feedPostTransitionEnterTimeout ease-in;
 }
 
 .feed-leave {
@@ -26,6 +32,39 @@
 .feed-leave.feed-leave-active {
   opacity: 0.01;
   height: 1px;
-  transition: opacity  @transitionLeaveTimeout ease-in;
-  transition: height  @transitionLeaveTimeout ease-in;
+  transition: opacity  @feedPathTransitionLeaveTimeout ease-in;
+  transition: height  @feedPathTransitionLeaveTimeout ease-in;
+}
+
+@feedPostHeightSmallScreens: 186px;
+@media (max-width: 40em) {
+    .feed-enter.feed-enter-active {
+        height: @feedPostHeightSmallScreens;
+    }
+
+    .feed-leave {
+        height: @feedPostHeightSmallScreens;
+    }
+}
+
+/*
+HACK: In order to style the ribbon wrapper component without forking the npm module,
+we resort to using `!important` on it's sub-elements classname
+*/
+.github-fork-ribbon-wrapper {
+    top: -28px !important;
+    right: -28px !important;
+    z-index: 0 !important;
+
+    .github-fork-ribbon {
+        background-image: none !important;
+        font-family: Roboto, sans-serif !important;
+        font-weight: 500 !important;
+        background-color: #8BC34A !important;
+        box-shadow: rgba(0, 0, 0, 0.398039) 0px 1px 2px 0px !important;
+    }
+
+    a {
+        text-shadow: none !important;
+    }
 }

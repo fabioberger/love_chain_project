@@ -38,13 +38,13 @@ class NewRequestDialog extends React.Component {
                 onRequestClose={() => this.props.toggleDialogFn(false)}
                 autoScrollBodyContent={true} >
                 <TextField
-                floatingLabelText={<RequiredLabelText label="Your name" />}
+                floatingLabelText={<RequiredLabelText label="Your first name" />}
                 errorText={this.state.requestFormErrMsgs.requesterName}
                 value={this.state.request.requesterName}
                 onChange={e => this._onUpdateRequest('requesterName', e.target.value)} />
                 <br />
                 <TextField
-                    floatingLabelText={<RequiredLabelText label="Your valentine's name" />}
+                    floatingLabelText={<RequiredLabelText label="Your valentine's first name" />}
                     errorText={this.state.requestFormErrMsgs.valentineName}
                     value={this.state.request.valentineName}
                     onChange={e => this._onUpdateRequest('valentineName', e.target.value)} />
