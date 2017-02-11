@@ -18,13 +18,15 @@ class AcceptRequestDialog extends React.Component {
                 ...this._getEmptyAcceptRequestObj(),
             },
             form: this._getEmptyAcceptRequestObj(),
+            isLoading: false,
         };
     }
     render() {
         const dialogActions = [
             <FlatButton
-                label="Accept"
+                label={this.state.isLoading ? 'Sending...' : 'Accept'}
                 primary={true}
+                disabled={this.state.isLoading}
                 keyboardFocused={true}
                 onTouchTap={this._onAcceptRequestClickAsync.bind(this)} />,
         ];
@@ -52,6 +54,10 @@ class AcceptRequestDialog extends React.Component {
         };
     }
     async _onAcceptRequestClickAsync() {
+        this.setState({
+            isLoading: true,
+        });
+
         const acceptRequestFormErrMsgs = {
             general: '',
             requesterAddress: '',
@@ -85,12 +91,14 @@ class AcceptRequestDialog extends React.Component {
         if (hasErrors) {
             this.setState({
                 acceptRequestFormErrMsgs,
+                isLoading: false,
             });
         } else {
             this.props.blockchainState.acceptValentineRequestAsync(requesterAddress);
             this.props.toggleDialogFn(false);
             this.setState({
                 form: this._getEmptyAcceptRequestObj(),
+                isLoading: false,
             });
         }
     }

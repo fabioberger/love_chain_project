@@ -21,14 +21,16 @@ class NewRequestDialog extends React.Component {
                 general: '',
                 ...this._getEmptyRequestFormMap(),
             },
+            isLoading: false,
         };
     }
     render() {
         const dialogActions = [
             <FlatButton
-                label="Create"
+                label={this.state.isLoading ? 'Sending...' : 'Create'}
                 primary={true}
                 keyboardFocused={true}
+                disabled={this.state.isLoading}
                 onTouchTap={this._onRequestSubmitClickAsync.bind(this)} />,
         ];
         const valentineAddressExplanation = 'If you specify your valentine\'s address here, only \
@@ -86,6 +88,10 @@ class NewRequestDialog extends React.Component {
         };
     }
     async _onRequestSubmitClickAsync() {
+        this.setState({
+            isLoading: true,
+        });
+
         const requestFormErrMsgs = this._getEmptyRequestFormMap();
         requestFormErrMsgs.general = '';
         const r = this.state.request;
@@ -133,12 +139,14 @@ class NewRequestDialog extends React.Component {
         if (hasErrors) {
             this.setState({
                 requestFormErrMsgs,
+                isLoading: false,
             });
         } else {
             this.props.blockchainState.createValentineRequestFireAndForgetAsync(completeRequest);
             this.props.toggleDialogFn(false);
             this.setState({
                 request: this._getEmptyRequestFormMap(),
+                isLoading: false,
             });
         }
     }
