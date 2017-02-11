@@ -76,6 +76,7 @@ class BlockchainState extends EventEmitter2 {
         await this._valentineRegistry.acceptValentineRequest(requesterAddress, {
             from: valentineRequest,
         });
+        this._valentineRequests.update(requesterAddress, 'wasAccepted', true);
     }
     async didRequesterAlreadyRequestAsync() {
         const requesterAddress = this._wrappedWeb3.getFirstAccountIfExists();
