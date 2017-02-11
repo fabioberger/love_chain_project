@@ -51,27 +51,21 @@ class BlockchainState extends EventEmitter2 {
     getFirstAccountIfExists() {
         return this._wrappedWeb3.getFirstAccountIfExists();
     }
-    async createValentineRequestFireAndForgetAsync(requesterName, valentineName, customMessage, valentineAddress) {
-        assert.isString(requesterName);
-        assert.isString(valentineName);
-        assert.isString(customMessage);
-        assert(this.isValidAddress(valentineAddress) || _.isEmpty(valentineAddress), 'valentineAddress \
-        must either be a valid ethereum address or an empty string');
-
-        const requesterAddress = this._wrappedWeb3.getFirstAccountIfExists();
-        assert(!_.isNull(requesterAddress), 'requesterAddress must be available for a transaction to be sent.');
+    async createValentineRequestFireAndForgetAsync(request) {
+        assert.isSchemaValid(request, 'request');
 
         const requestOpts = {
-            from: requesterAddress,
+            from: request.requesterAddress,
             value: this._wrappedWeb3.call('toWei', 0.1, 'ether'),
         }
-        if (_.isEmpty(valentineAddress)) {
-            await this._valentineRegistry.createOpenValentineRequest(requesterName, valentineName,
-                customMessage, requestOpts);
+        if (utils.isNullAddress(request.valentineAddress)) {
+            await this._valentineRegistry.createOpenValentineRequest(request.requesterName,
+                request.valentineName, request.customMessage, requestOpts);
         } else {
-            await this._valentineRegistry.createTargetedValentineRequest(requesterName, valentineName,
-                customMessage, valentineAddress, requestOpts);
+            await this._valentineRegistry.createTargetedValentineRequest(request.requesterName,
+                request.valentineName, request.customMessage, request.valentineAddress, requestOpts);
         }
+        this._valentineRequests.add(request);
     }
     async acceptValentineRequestAsync(requesterAddress) {
         assert(this.isValidAddress(requesterAddress), 'requesterAddress must be valid ethereum address');

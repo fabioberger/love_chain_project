@@ -15,8 +15,8 @@ const faker = {
             'I love you!',
             'Thanks for being a part of my life...',
             'Te quiero mucho mucho mucho querido!!!',
-            'Ever since I first saw you, I knew you were the one for me. Can\'t believe it\'s been \
-            2 years already. Looking forward to the next one aswell!',
+            `Ever since I first saw you, I knew you were the one for me. Can't believe it's been
+2 years already. Looking forward to the next one aswell`,
             'Thanks for making me the person that I am today. Love you so much!',
             'Je t\'aime mon amour. Tu me fait tellement heureuse, j\'ai envie de te revoir bientot!',
             'Oi amor! Feliz dia dos Namorados! Agora nosso amor e enscrito eternamente no blockchain. Te amo',

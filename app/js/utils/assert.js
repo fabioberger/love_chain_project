@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import validator from 'js/schemas/validator';
 
 const assert = (condition, message) => {
     if (!condition) {
@@ -17,5 +18,17 @@ assert.isFunction = value => {
 assert.isObject = value => {
     assert(_.isObject(value), `Expected ${value} to be a object`);
 };
+
+assert.isSchemaValid = (instance, schemaName) => {
+    assert.isObject(instance);
+    assert.isString(schemaName);
+
+    const validationErrs = validator.getValidationErrorsIfExists(instance, schemaName);
+    if (!_.isNull(validationErrs)) {
+        console.log('Schema validation failed for: ', instance);
+        throw validationErrs;
+    }
+    // otherwise continue
+}
 
 export default assert;

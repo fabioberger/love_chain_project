@@ -1,9 +1,11 @@
 import _ from 'lodash';
 import React from 'react';
 import {Dialog, FlatButton, TextField} from 'material-ui';
+import constants from 'js/utils/constants';
 import BlockchainState from 'js/blockchain_state';
 import HelpTooltip from 'js/components/sub_components/help_tooltip';
 import RequiredLabelText from 'js/components/sub_components/required_label_text';
+import validator from 'js/schemas/validator';
 
 class NewRequestDialog extends React.Component {
     static propTypes = {
@@ -41,18 +43,19 @@ class NewRequestDialog extends React.Component {
                 onRequestClose={() => this.props.toggleDialogFn(false)}
                 autoScrollBodyContent={true} >
                 <TextField
-                floatingLabelText={<RequiredLabelText label="Your first name" />}
-                errorText={this.state.requestFormErrMsgs.requesterName}
-                value={this.state.request.requesterName}
-                onChange={e => this._onUpdateRequest('requesterName', e.target.value)} />
-                <br />
+                    className="block"
+                    floatingLabelText={<RequiredLabelText label="Your first name" />}
+                    errorText={this.state.requestFormErrMsgs.requesterName}
+                    value={this.state.request.requesterName}
+                    onChange={e => this._onUpdateRequest('requesterName', e.target.value)} />
                 <TextField
+                    className="block mt1"
                     floatingLabelText={<RequiredLabelText label="Your valentine's first name" />}
                     errorText={this.state.requestFormErrMsgs.valentineName}
                     value={this.state.request.valentineName}
                     onChange={e => this._onUpdateRequest('valentineName', e.target.value)} />
-                <br />
                 <TextField
+                    className="block mt1"
                     floatingLabelText={<RequiredLabelText label="Custom message" />}
                     multiLine={true}
                     rows={2}
@@ -60,8 +63,7 @@ class NewRequestDialog extends React.Component {
                     errorText={this.state.requestFormErrMsgs.customMessage}
                     value={this.state.request.customMessage}
                     onChange={e => this._onUpdateRequest('customMessage', e.target.value)} />
-                <br />
-                <span>
+                <div className="block mt1">
                     <TextField
                         floatingLabelText="Your valentine's ethereum address"
                         errorText={this.state.requestFormErrMsgs.valentineAddress}
@@ -70,7 +72,7 @@ class NewRequestDialog extends React.Component {
                         onKeyUp={this._onKeyUp.bind(this)} />
                     {' '}
                     <HelpTooltip explanation={valentineAddressExplanation} />
-                </span>
+                </div>
                 <div className="pt2">{this.state.requestFormErrMsgs.general}</div>
             </Dialog>
         );
@@ -88,24 +90,25 @@ class NewRequestDialog extends React.Component {
         requestFormErrMsgs.general = '';
         const r = this.state.request;
 
-        const requiredFields = ['requesterName', 'valentineName', 'customMessage'];
-        _.each(requiredFields, requiredField => {
-            if (r[requiredField] === '') {
-                requestFormErrMsgs[requiredField] = `${requiredField} is required`;
-            }
-        });
-
-        const MAX_CUSTOM_MESSAGE_LENGTH = 140;
-        if (r.customMessage.length > MAX_CUSTOM_MESSAGE_LENGTH) {
-            requestFormErrMsgs.customMessage = `Cannot exceeded ${MAX_CUSTOM_MESSAGE_LENGTH} characters`;
+        const completeRequest = Object.assign({}, r);
+        if (_.isEmpty(completeRequest.valentineAddress)) {
+            completeRequest.valentineAddress = constants.NULL_ADDRESS;
         }
+        completeRequest.wasAccepted = false;
+        completeRequest.requesterAddress = this.props.blockchainState.getFirstAccountIfExists();
+        const validationErrs = validator.getValidationErrorsIfExists(completeRequest, 'request');
 
-        const MAX_NAME_LENGTH = 25;
-        if (r.requesterName.length > MAX_NAME_LENGTH) {
-            requestFormErrMsgs.requesterName = `Cannot exceeded ${MAX_NAME_LENGTH} characters`;
-        }
-        if (r.valentineName.length > MAX_NAME_LENGTH) {
-            requestFormErrMsgs.valentineName = `Cannot exceeded ${MAX_NAME_LENGTH} characters`;
+        if (!_.isNull(validationErrs)) {
+            _.each(validationErrs.details, validationErr => {
+                if (validationErr.path !== 'requesterAddress') {
+                    const messageWithoutFieldName = validationErr.message.replace(/\".*\"/g,'');
+                    requestFormErrMsgs[validationErr.path] = messageWithoutFieldName;
+                } else {
+                    requestFormErrMsgs.general = 'Your ethereum address was not found. web3.eth.accounts \
+                    did not return any account addresses. If using Metamask, re-select an account and try \
+                    again.';
+                }
+            });
         }
 
         if (r.valentineAddress !== '' &&
@@ -113,13 +116,7 @@ class NewRequestDialog extends React.Component {
             requestFormErrMsgs.valentineAddress = 'Must be a valid hex encoded ethereum address e.g 0xccd51...';
         }
 
-        const senderAddress = this.props.blockchainState.getFirstAccountIfExists();
-        const isSenderAddressAvailable = !_.isNull(senderAddress);
-        if (!isSenderAddressAvailable) {
-            requestFormErrMsgs.general = 'Your ethereum address was not found. web3.eth.accounts \
-            did not return any account addresses. If using Metamask, re-select an account and try \
-            again.';
-        } else {
+        if (!_.isNull(completeRequest.requesterAddress)) {
             const doesExistingRequestExist = await this.props.blockchainState.didRequesterAlreadyRequestAsync();
             if (doesExistingRequestExist) {
                 requestFormErrMsgs.general = 'You can only send one valentine request per account.';
@@ -138,7 +135,7 @@ class NewRequestDialog extends React.Component {
                 requestFormErrMsgs,
             });
         } else {
-            this.props.blockchainState.createValentineRequestFireAndForgetAsync(r.requesterName, r.valentineName, r.customMessage, r.valentineAddress);
+            this.props.blockchainState.createValentineRequestFireAndForgetAsync(completeRequest);
             this.props.toggleDialogFn(false);
             this.setState({
                 request: this._getEmptyRequestFormMap(),

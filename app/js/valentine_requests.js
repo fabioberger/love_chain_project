@@ -8,7 +8,7 @@ class ValentineRequests {
         this._orderedRequesterAddresses = [];
     }
     add(request) {
-        assert.isObject(request);
+        assert.isSchemaValid(request, 'request');
 
         this._requestsByRequesterAddress[request.requesterAddress] = request;
         this._orderedRequesterAddresses = [request.requesterAddress, ...this._orderedRequesterAddresses];
