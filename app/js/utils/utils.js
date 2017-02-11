@@ -1,4 +1,4 @@
-const NULL_ADDRESS = '0x0000000000000000000000000000000000000000';
+import constants from 'js/utils/constants';
 
 const utils = {
     keyWords(words) {
@@ -9,8 +9,8 @@ const utils = {
         return keywords;
     },
     isNullAddress(address) {
-        return address === NULL_ADDRESS;
+        return address === constants.NULL_ADDRESS;
     },
 };
 
-export { utils as default, NULL_ADDRESS };
+export default utils;

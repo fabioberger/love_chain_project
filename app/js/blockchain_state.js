@@ -3,7 +3,8 @@ import Web3 from 'web3';
 import contract from 'truffle-contract';
 import deepEqual from 'deep-equal';
 import {EventEmitter2} from 'eventemitter2';
-import {default as utils, NULL_ADDRESS} from 'js/utils/utils';
+import utils from 'js/utils/utils';
+import constants from 'js/utils/constants';
 import assert from 'js/utils/assert';
 import ValentineRegistryArtifacts from '../../build/contracts/ValentineRegistry.json';
 import Web3Wrapper from 'js/web3_wrapper';
@@ -45,7 +46,7 @@ class BlockchainState extends EventEmitter2 {
         return this._valentineRequests.getAll();
     }
     isRequestTargetedAtUser(valentineAddress) {
-        return valentineAddress === this._wrappedWeb3.getFirstAccountIfExists() || valentineAddress === NULL_ADDRESS;
+        return valentineAddress === this._wrappedWeb3.getFirstAccountIfExists() || valentineAddress === constants.NULL_ADDRESS;
     }
     getFirstAccountIfExists() {
         return this._wrappedWeb3.getFirstAccountIfExists();
@@ -235,7 +236,7 @@ class BlockchainState extends EventEmitter2 {
         return request;
     }
     _doesRequestExist(request) {
-        const emptyRequestArr = ['', '', '', false, NULL_ADDRESS, NULL_ADDRESS];
+        const emptyRequestArr = ['', '', '', false, constants.NULL_ADDRESS, constants.NULL_ADDRESS];
         return !deepEqual(request, this._convertRequestArrToObj(emptyRequestArr));
     }
     _onValentineRequestsUpdated() {
