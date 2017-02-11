@@ -154,6 +154,33 @@ contract('ValentineRegistry', accounts => {
         const balanceAfterInEther = web3.fromWei(balanceAfter, 'ether').toString();
         assert.equal(balanceAfterInEther, 0);
     });
+
+    it('should not cash out contract balance when non-owner calls cashout', async () => {
+        const sufficientValue = web3.toWei(0.1, 'ether');
+        await registry.createOpenValentineRequest(requesterName, valentineName, customMessage, {
+            from: anotherNonOwner,
+            value: sufficientValue,
+        });
+        const balanceBefore = web3.eth.getBalance(registry.address);
+        const balanceBeforeInEther = web3.fromWei(balanceBefore, 'ether').toString();
+        assert.equal(balanceBeforeInEther, 0.1);
+
+        try {
+            const result = await registry.cashout(nonOwner, {
+                from: nonOwner,
+            });
+            assert(false, 'Expected cashout to throw called by non-owner.');
+        } catch(err) {
+            if (didContractThrow(err)) {
+                // let test pass
+            } else {
+                assert(false, err + '');
+            }
+        }
+        const balanceAfter = web3.eth.getBalance(registry.address);
+        const balanceAfterInEther = web3.fromWei(balanceAfter, 'ether').toString();
+        assert.equal(balanceAfterInEther, 0.1);
+    });
 });
 
 const didContractThrow = err => {
