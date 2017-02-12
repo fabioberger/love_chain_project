@@ -3,7 +3,7 @@ import validator from 'js/schemas/validator';
 
 const assert = (condition, message) => {
     if (!condition) {
-        throw new Error('Assertion failed:', message);
+        throw new Error(`Assertion failed: ${message}`);
     }
 };
 
