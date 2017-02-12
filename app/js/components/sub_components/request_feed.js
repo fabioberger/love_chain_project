@@ -5,14 +5,20 @@ import BlockchainState from 'js/blockchain_state';
 import RequestFeedPost from 'js/components/sub_components/request_feed_post';
 
 class RequestFeed extends React.Component {
+    constructor(props) {
+        super(props);
+        this._valentineRequestsUpdatedEventHandler = this.forceUpdate.bind(this);
+    }
     static propTypes = {
         blockchainState: React.PropTypes.instanceOf(BlockchainState),
     }
     componentDidMount() {
-        this.props.blockchainState.on('valentineRequestsUpdated', this.forceUpdate.bind(this));
+        this.props.blockchainState.on('valentineRequestsUpdated',
+            this._valentineRequestsUpdatedEventHandler);
     }
-    componentWillUnMount() {
-        this.props.blockchainState.removeListener('valentineRequestsUpdated', this.forceUpdate.bind(this));
+    componentWillUnmount() {
+        this.props.blockchainState.removeListener('valentineRequestsUpdated',
+            this._valentineRequestsUpdatedEventHandler);
     }
     render() {
         // Warning: do not edit these constants without also editing their corresponding values in
