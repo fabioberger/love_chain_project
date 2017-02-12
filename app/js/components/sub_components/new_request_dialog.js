@@ -5,6 +5,7 @@ import constants from 'js/utils/constants';
 import BlockchainState from 'js/blockchain_state';
 import HelpTooltip from 'js/components/sub_components/help_tooltip';
 import RequiredLabelText from 'js/components/sub_components/required_label_text';
+import LoadingMini from 'js/components/sub_components/loading_mini';
 import validator from 'js/schemas/validator';
 
 class NewRequestDialog extends React.Component {
@@ -21,13 +22,24 @@ class NewRequestDialog extends React.Component {
                 general: '',
                 ...this._getEmptyRequestFormMap(),
             },
+            isValidating: false,
             isLoading: false,
         };
     }
     render() {
+        let loadingSymbol = [];
+        if (this.state.isLoading && !this.state.isValidating) {
+            loadingSymbol = [
+                <div className="left pl2" style={{fontSize: '13px', paddingTop: 10}}>
+                    <b>Note:</b> This can take a minute or two
+                </div>,
+                <LoadingMini className="inline-block" />,
+            ];
+        }
         const dialogActions = [
+            ...loadingSymbol,
             <FlatButton
-                label={this.state.isLoading ? 'Sending...' : 'Create'}
+                label={(this.state.isLoading && !this.state.isValidating) ? 'Sending...' : 'Create'}
                 primary={true}
                 keyboardFocused={true}
                 disabled={this.state.isLoading}
@@ -42,6 +54,7 @@ class NewRequestDialog extends React.Component {
                 actions={dialogActions}
                 open={this.props.isOpen}
                 contentStyle={{width: '400px'}}
+                modal={this.state.isLoading}
                 onRequestClose={() => this.props.toggleDialogFn(false)}
                 autoScrollBodyContent={true} >
                 <TextField
@@ -49,12 +62,14 @@ class NewRequestDialog extends React.Component {
                     floatingLabelText={<RequiredLabelText label="Your first name" />}
                     errorText={this.state.requestFormErrMsgs.requesterName}
                     value={this.state.request.requesterName}
+                    disabled={this.state.isLoading}
                     onChange={e => this._onUpdateRequest('requesterName', e.target.value)} />
                 <TextField
                     className="block mt1"
                     floatingLabelText={<RequiredLabelText label="Your valentine's first name" />}
                     errorText={this.state.requestFormErrMsgs.valentineName}
                     value={this.state.request.valentineName}
+                    disabled={this.state.isLoading}
                     onChange={e => this._onUpdateRequest('valentineName', e.target.value)} />
                 <TextField
                     className="block mt1"
@@ -64,12 +79,14 @@ class NewRequestDialog extends React.Component {
                     rowsMax={4}
                     errorText={this.state.requestFormErrMsgs.customMessage}
                     value={this.state.request.customMessage}
+                    disabled={this.state.isLoading}
                     onChange={e => this._onUpdateRequest('customMessage', e.target.value)} />
                 <div className="block mt1">
                     <TextField
                         floatingLabelText="Your valentine's ethereum address"
                         errorText={this.state.requestFormErrMsgs.valentineAddress}
                         value={this.state.request.valentineAddress}
+                        disabled={this.state.isLoading}
                         onChange={e => this._onUpdateRequest('valentineAddress', e.target.value)}
                         onKeyUp={this._onKeyUp.bind(this)} />
                     {' '}
@@ -90,6 +107,7 @@ class NewRequestDialog extends React.Component {
     async _onRequestSubmitClickAsync() {
         this.setState({
             isLoading: true,
+            isValidating: true,
         });
 
         const requestFormErrMsgs = this._getEmptyRequestFormMap();
@@ -129,20 +147,18 @@ class NewRequestDialog extends React.Component {
             }
         }
 
-        let hasErrors = false;
-        _.each(requestFormErrMsgs, (value, key) => {
-            if (value !== '') {
-                hasErrors = true;
-            }
-        });
+        const hasErrors = _.some(requestFormErrMsgs, (value, key) => value !== '');
 
+        this.setState({
+            requestFormErrMsgs,
+            isValidating: false,
+        });
         if (hasErrors) {
             this.setState({
-                requestFormErrMsgs,
                 isLoading: false,
             });
         } else {
-            this.props.blockchainState.createValentineRequestFireAndForgetAsync(completeRequest);
+            await this.props.blockchainState.createValentineRequestAsync(completeRequest);
             this.props.toggleDialogFn(false);
             this.setState({
                 request: this._getEmptyRequestFormMap(),
