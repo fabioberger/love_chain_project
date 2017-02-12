@@ -2,6 +2,7 @@ import _ from 'lodash';
 import React from 'react';
 import {RaisedButton, Paper} from 'material-ui';
 import BlockchainState from 'js/blockchain_state';
+import configs from 'js/utils/configs';
 import RequestFeed from 'js/components/sub_components/request_feed';
 import NewRequestDialog from 'js/components/sub_components/new_request_dialog';
 import AcceptRequestDialog from 'js/components/sub_components/accept_request_dialog';
@@ -39,10 +40,12 @@ class Home extends React.Component {
             <Paper style={style} zDepth={3}>
                 <div className="pl2 pr2 pt3 clearfix">
                     <div className="hostedBadge">
+                        <a target="_blank" href={configs.ETHERSCAN_MAINNET_URL}>
                         <div>
                             <img style={{width: '50px'}} src="imgs/ethereum_icon.png" />
                         </div>
                         <div className="h5">Hosted on Ethereum</div>
+                        </a>
                     </div>
                     <div className="ml2 actionButtons">
                         <div className="pb2">
