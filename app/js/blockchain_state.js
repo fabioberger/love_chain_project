@@ -5,12 +5,13 @@ import deepEqual from 'deep-equal';
 import {EventEmitter2} from 'eventemitter2';
 import utils from 'js/utils/utils';
 import constants from 'js/utils/constants';
+import configs from 'js/utils/configs';
 import assert from 'js/utils/assert';
 import ValentineRegistryArtifacts from '../../build/contracts/ValentineRegistry.json';
 import Web3Wrapper from 'js/web3_wrapper';
 import ValentineRequests from 'js/valentine_requests';
 import faker from 'js/utils/faker';
-
+import Provider from 'js/provider';
 
 class BlockchainState extends EventEmitter2 {
     constructor(onUpdatedFn) {
@@ -24,6 +25,7 @@ class BlockchainState extends EventEmitter2 {
         this._valentineRequests = new ValentineRequests(this._onValentineRequestsUpdated.bind(this));
         this._logValentineRequestCreated = null;
         this._logRequestAccepted = null;
+        this._provider = null;
         this._eventNames = utils.keyWords([
             'valentineRequestsUpdated',
         ]);
@@ -37,6 +39,35 @@ class BlockchainState extends EventEmitter2 {
     }
     isLoaded() {
         return this._isLoaded;
+    }
+    // Pass-through methods to Provider class
+    getProviderType() {
+        return this._provider.getProviderType();
+    }
+    getProviderNameForType(providerType) {
+        return this._provider.getProviderNameForType(providerType);
+    }
+    canSendTransactions() {
+        return this._provider.canSendTransactions();
+    }
+    updateProvider(providerType) {
+        assert(!_.isUndefined(constants.PROVIDER_TYPES[providerType]),
+            'Can only set provider to a valid provider type listed in constants.PROVIDER_TYPES');
+
+        this._err = null;
+        this._isLoaded = false;
+        this._onUpdatedFn();
+
+        this._stopWatchingContractEvents();
+        this._wrappedWeb3.removeNetworkConnectionListener(this._networkConnectionChangedAsync.bind(this));
+
+        this._provider.updateProvider(providerType);
+
+        const web3Instance = new Web3(this._provider.getProviderObj());
+        this._wrappedWeb3 = new Web3Wrapper(web3Instance);
+        this._wrappedWeb3.addNetworkConnectionListener(this._networkConnectionChangedAsync.bind(this));
+
+        this._instantiateContractAsync();
     }
     isValidAddress(address) {
         const lowercaseAddress = address.toLowerCase();
@@ -97,37 +128,29 @@ class BlockchainState extends EventEmitter2 {
     }
     async _onPageLoadInitFireAndForgetAsync() {
         await this._onPageLoadAsync(); // wait for page to load
+        // Once page loaded, we can instantiate provider
+        this._provider = new Provider();
 
-        const wrappedExistingWeb3 = new Web3Wrapper(window.web3);
-        const doesWeb3InstanceExist = wrappedExistingWeb3.doesExist();
-        if (!doesWeb3InstanceExist) {
-            // TODO: replace error with backup option i.e infura.io
-            this._err = 'NO_WEB3_INSTANCE_FOUND';
-            this._isLoaded = true;
-            this._onUpdatedFn();
-        } else {
-            // Create new instance of web3 with only the currentProvider taken from the pre-existing
-            // instance so as to not depend on third-party's version of web3.
-            const web3Instance = new Web3(wrappedExistingWeb3.get('currentProvider'));
-            wrappedExistingWeb3.destroy();
-            this._wrappedWeb3 = new Web3Wrapper(web3Instance);
-            this._wrappedWeb3.on('networkConnection', this._networkConnectionChangedAsync.bind(this));
+        const web3Instance = new Web3(this._provider.getProviderObj());
+        this._wrappedWeb3 = new Web3Wrapper(web3Instance);
+        this._wrappedWeb3.addNetworkConnectionListener(this._networkConnectionChangedAsync.bind(this));
 
-            await this._instantiateContractAsync();
-        }
+        await this._instantiateContractAsync();
     }
     async _instantiateContractAsync() {
         this._networkId = await this._wrappedWeb3.getNetworkIdIfExists();
         const doesNetworkExist = !_.isNull(this._networkId);
         if (doesNetworkExist) {
             const valentineRegistry = await contract(ValentineRegistryArtifacts);
-            valentineRegistry.setProvider(this._wrappedWeb3.get('currentProvider'));
+            valentineRegistry.setProvider(this._provider.getProviderObj());
             try {
                 this._valentineRegistry = await valentineRegistry.deployed();
                 await this._getExistingRequestsAsync();
                 this._kickoffFakeRequestAdds();
                 this._createFakeRequests(10);
-                this._startWatchingContractForEvents();
+                if (this._provider.doesSupportEventListening()) {
+                    this._startWatchingContractForEvents();
+                }
             } catch(err) {
                 const errMsg = `${err}`;
                 if (_.includes(errMsg, 'not been deployed to detected network')) {
@@ -139,6 +162,7 @@ class BlockchainState extends EventEmitter2 {
                 }
             }
         } else {
+            console.log('Notice: web3.version.getNetwork returned null');
             this._err = 'DISCONNECTED_FROM_ETHEREUM_NODE';
         }
         this._isLoaded = true;
@@ -166,14 +190,17 @@ class BlockchainState extends EventEmitter2 {
             this._valentineRequests.add(request);
         }, 2000);
     }
-    _startWatchingContractForEvents() {
-        // Ensure we are only ever listening to one set of events
+    _stopWatchingContractEvents() {
         if (!_.isNull(this._logValentineRequestCreated)) {
             this._logValentineRequestCreated.stopWatching();
         }
         if (!_.isNull(this._logRequestAccepted)) {
             this._logRequestAccepted.stopWatching();
         }
+    }
+    _startWatchingContractForEvents() {
+        // Ensure we are only ever listening to one set of events
+        this._stopWatchingContractEvents();
 
         this._logValentineRequestCreated = this._valentineRegistry.LogValentineRequestCreated({}, 'latest');
         this._logValentineRequestCreated.watch((err, result) => {

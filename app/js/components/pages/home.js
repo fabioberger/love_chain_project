@@ -7,6 +7,7 @@ import NewRequestDialog from 'js/components/sub_components/new_request_dialog';
 import AcceptRequestDialog from 'js/components/sub_components/accept_request_dialog';
 import Loading from 'js/components/sub_components/loading';
 import Error from 'js/components/sub_components/error';
+import ProviderMenu from 'js/components/sub_components/provider_menu';
 
 class Home extends React.Component {
     static propTypes = {
@@ -24,8 +25,8 @@ class Home extends React.Component {
     }
     render() {
         const style = {
-            height: 800,
             width: '100%',
+            position: 'relative',
             textAlign: 'center',
             display: 'inline-block',
         };
@@ -35,22 +36,35 @@ class Home extends React.Component {
         return (
             <Paper style={style} zDepth={3}>
                 <div className="pl2 pr2 pt3 clearfix">
-                    <div className="inline-block hostedBadge">
+                    <div className="hostedBadge">
                         <div>
                             <img style={{width: '50px'}} src="imgs/ethereum_icon.png" />
                         </div>
                         <div className="h5">Hosted on Ethereum</div>
                     </div>
-                    <RaisedButton
-                        label="Send Valentine Request"
-                        className="ml2 left acceptButton"
-                        disabled={!isLoaded || hasBlockchainErr}
-                        onTouchTap={() => this._newRequestDialogToggle(true)} />
-                    <RaisedButton
-                        label="Accept Valentine Request"
-                        className="mr2 right sendButton"
-                        disabled={!isLoaded || hasBlockchainErr}
-                        onTouchTap={() => this._acceptRequestDialogToggle(true)} />
+                    <div className="ml2 actionButtons">
+                        <div className="pb2">
+                            <RaisedButton
+                                style={{width: 225}}
+                                label="Send Valentine Request"
+                                className="acceptButton"
+                                disabled={!isLoaded || hasBlockchainErr}
+                                onTouchTap={() => this._onSendValentineRequestClick()} />
+                        </div>
+                        <div>
+                            <RaisedButton
+                                label="Accept Valentine Request"
+                                className="sendButton"
+                                disabled={!isLoaded || hasBlockchainErr}
+                                onTouchTap={() => this._onAcceptValentineRequestClick()} />
+                        </div>
+                    </div>
+                    <div className="networkMenu" style={{width: 263, height: 56}}>
+                        {isLoaded &&
+                            <ProviderMenu
+                                blockchainState={this.props.blockchainState} />
+                        }
+                    </div>
                 </div>
                 <div className="mx3 p3 mt3 mb3 overflow-scroll relative" style={{backgroundColor: "#FFCDD2", height: "530px"}}>
                     {!isLoaded ?
@@ -72,6 +86,20 @@ class Home extends React.Component {
                 }
             </Paper>
         );
+    }
+    _onSendValentineRequestClick() {
+        if (this.props.blockchainState.canSendTransactions()) {
+            this._newRequestDialogToggle(true);
+        } else {
+            this._publicNodeNoticeDialogToggle(true);
+        }
+    }
+    _onAcceptValentineRequestClick() {
+        if (this.props.blockchainState.canSendTransactions()) {
+            this._acceptRequestDialogToggle(true);
+        } else {
+            this._publicNodeNoticeDialogToggle(true);
+        }
     }
     _newRequestDialogToggle(isOpen) {
         this.setState({

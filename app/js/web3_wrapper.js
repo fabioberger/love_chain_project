@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import utils from 'js/utils/utils';
 import {EventEmitter2} from 'eventemitter2';
 import assert from 'js/utils/assert';
 
@@ -16,6 +17,9 @@ class Web3Wrapper extends EventEmitter2 {
             'currentProvider',
             'eth.accounts',
         ];
+        this._eventNames = utils.keyWords([
+            'networkConnection',
+        ]);
 
         if (_.isUndefined(web3Instance) || _.isNull(web3Instance)) {
             this._web3 = null;
@@ -35,6 +39,12 @@ class Web3Wrapper extends EventEmitter2 {
             return null;
         }
         return address;
+    }
+    addNetworkConnectionListener(callback) {
+        this.on(this._eventNames.networkConnection, callback);
+    }
+    removeNetworkConnectionListener(callback) {
+        this.removeListener(this._eventNames.networkConnection, callback);
     }
     async getNetworkIdIfExists() {
         if (!this.doesExist()) {
@@ -58,7 +68,7 @@ class Web3Wrapper extends EventEmitter2 {
             const currentNetworkId = await this.getNetworkIdIfExists();
             if (currentNetworkId !== prevNetworkId) {
                 prevNetworkId = currentNetworkId;
-                this.emit('networkConnection', currentNetworkId);
+                this.emit(this._eventNames.networkConnection, currentNetworkId);
             }
         }, 1000);
     }

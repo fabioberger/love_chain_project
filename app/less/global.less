@@ -31,27 +31,49 @@ svg {
     width: 320px;
 }
 
-@media (max-width: 40em) {
+.hostedBadge {
+    width: 135px;
+    position: absolute;
+    top: 29px;
+    left: 50%;
+    transform: translate(-50%);
+}
+
+.actionButtons {
+    float: left;
+}
+
+.networkMenu {
+    float: right;
+    padding-left: 1rem;
+}
+
+@media (max-width: 43em) {
     .xsm-h1 {
         font-size: 28px;
     }
 
-    .sendButton {
-        float: none;
-        margin-top: 0.5rem;
-        width: 90%;
-        margin-right: 0;
-    }
-
-    .acceptButton {
-        float: none;
-        width: 90%;
-        margin-left: 0;
-    }
-
     .hostedBadge {
+        position: relative;
         display: block;
         padding-bottom: 1rem;
+        top: 0;
+        left: 0;
+        transform: none;
+        margin: 0 auto;
+    }
+
+    .actionButtons {
+        float: none;
+        display: block;
+        padding-left: none;
+    }
+
+    .networkMenu {
+        float: none;
+        text-align: center;
+        margin: 0 auto;
+        padding-top: 20px;
     }
 
     // Loading component

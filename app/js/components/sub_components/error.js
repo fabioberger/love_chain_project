@@ -13,8 +13,7 @@ const errorTypeToMessage = {
     ),
     DISCONNECTED_FROM_ETHEREUM_NODE: (
         <span>
-            Hm... looks like the backing ethereum node is offline. Try switching networks in Metamask
-            or double check that your local node is still running.
+            Hm... looks like the backing ethereum node is offline.
         </span>
     ),
     CONTRACT_NOT_DEPLOYED_ON_NETWORK: (
