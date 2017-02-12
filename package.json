@@ -14,7 +14,6 @@
     "deep-equal": "^1.0.1",
     "eventemitter2": "^3.0.0",
     "joi-browser": "^10.0.6",
-    "jquery": "^1.9.1",
     "json-loader": "^0.5.4",
     "less": "2.6.x",
     "lodash": "^4.17.2",
