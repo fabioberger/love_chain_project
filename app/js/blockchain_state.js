@@ -82,21 +82,27 @@ class BlockchainState extends EventEmitter2 {
     getFirstAccountIfExists() {
         return this._wrappedWeb3.getFirstAccountIfExists();
     }
-    async createValentineRequestFireAndForgetAsync(request) {
+    async createValentineRequestAsync(request) {
         assert.isSchemaValid(request, 'request');
 
         const requestOpts = {
             from: request.requesterAddress,
             value: this._wrappedWeb3.call('toWei', 0.1, 'ether'),
         }
-        if (utils.isNullAddress(request.valentineAddress)) {
-            await this._valentineRegistry.createOpenValentineRequest(request.requesterName,
-                request.valentineName, request.customMessage, requestOpts);
-        } else {
-            await this._valentineRegistry.createTargetedValentineRequest(request.requesterName,
-                request.valentineName, request.customMessage, request.valentineAddress, requestOpts);
+        try {
+            if (utils.isNullAddress(request.valentineAddress)) {
+                await this._valentineRegistry.createOpenValentineRequest(request.requesterName,
+                    request.valentineName, request.customMessage, requestOpts);
+            } else {
+                await this._valentineRegistry.createTargetedValentineRequest(request.requesterName,
+                    request.valentineName, request.customMessage, request.valentineAddress, requestOpts);
+            }
+            this._valentineRequests.add(request);
+        } catch(err) {
+            // We simply log this edge-case for now. This case is reached if user rejects our transaction
+            // in the Metamask/Mist confirmation step. Other possible errors can lead here too.
+            console.log(`Warning: createValentineRequest failed with error: ${err}`);
         }
-        this._valentineRequests.add(request);
     }
     async acceptValentineRequestAsync(requesterAddress) {
         assert(this.isValidAddress(requesterAddress), 'requesterAddress must be valid ethereum address');
@@ -104,9 +110,16 @@ class BlockchainState extends EventEmitter2 {
         const valentineRequest = this._wrappedWeb3.getFirstAccountIfExists();
         assert(!_.isNull(valentineRequest), 'valentineRequest must be available for a transaction to be sent.');
 
-        await this._valentineRegistry.acceptValentineRequest(requesterAddress, {
-            from: valentineRequest,
-        });
+        try {
+            await this._valentineRegistry.acceptValentineRequest(requesterAddress, {
+                from: valentineRequest,
+            });
+        } catch(err) {
+            // We simply log this edge-case for now. This case is reached if user rejects our transaction
+            // in the Metamask/Mist confirmation step. Other possible errors can lead here too.
+            console.log(`Warning: acceptValentineRequest failed with error: ${err}`);
+        }
+
         this._valentineRequests.update(requesterAddress, 'wasAccepted', true);
     }
     async didRequesterAlreadyRequestAsync() {
