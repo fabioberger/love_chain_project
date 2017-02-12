@@ -9,6 +9,7 @@ class Provider {
         this._providerType = null;
         this._providerTypesToNames = {
             [constants.PROVIDER_TYPES.publicNode]: 'Infura.io',
+            [constants.PROVIDER_TYPES.localNode]: 'localhost:8545',
             [constants.PROVIDER_TYPES.localWeb3]: '',
         };
         this._providerObj = null;
@@ -59,6 +60,9 @@ class Provider {
             case constants.PROVIDER_TYPES.publicNode:
                 this._providerObj = this._getPublicNodeProvider();
                 break;
+            case constants.PROVIDER_TYPES.localNode:
+                this._providerObj = this._getLocalNodeProvider();
+                break;
             case constants.PROVIDER_TYPES.localWeb3:
                 this._providerObj = this._unusedLocalWebProviderObj;
                 this._unusedLocalWebProviderObj = null;
@@ -78,12 +82,17 @@ class Provider {
         const providerObj = new Web3.providers.HttpProvider(configs.INFURA_TESTNET_URL);
         return providerObj;
     }
+    _getLocalNodeProvider() {
+        const providerObj = new Web3.providers.HttpProvider(configs.LOCALHOST_URL);
+        return providerObj;
+    }
     _discoverLocalWeb3ProviderName() {
-        // TODO: Figure out how to discover more providers... Maybe from URL? Or ProviderName?
         if (this._providerObj.isMetaMask) {
             return 'Metamask';
+        } else {
+            // Default to showing the provider classname
+            return this._providerObj.constructor.name;
         }
-        return 'Unknown';
     }
 }
 
