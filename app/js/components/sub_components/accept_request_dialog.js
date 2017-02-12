@@ -2,6 +2,7 @@ import _ from 'lodash';
 import React from 'react';
 import {Dialog, FlatButton, TextField} from 'material-ui';
 import BlockchainState from 'js/blockchain_state';
+import LoadingMini from 'js/components/sub_components/loading_mini';
 import RequiredLabelText from 'js/components/sub_components/required_label_text';
 
 class AcceptRequestDialog extends React.Component {
@@ -19,12 +20,23 @@ class AcceptRequestDialog extends React.Component {
             },
             form: this._getEmptyAcceptRequestObj(),
             isLoading: false,
+            isValidating: true,
         };
     }
     render() {
+        let loadingSymbol = [];
+        if (this.state.isLoading  && !this.state.isValidating) {
+            loadingSymbol = [
+                <div className="left pl2" style={{fontSize: '13px', paddingTop: 10}}>
+                    <b>Note:</b> This can take a minute or two
+                </div>,
+                <LoadingMini className="inline-block" />,
+            ];
+        }
         const dialogActions = [
+            ...loadingSymbol,
             <FlatButton
-                label={this.state.isLoading ? 'Sending...' : 'Accept'}
+                label={(this.state.isLoading && !this.state.isValidating) ? 'Sending...' : 'Accept'}
                 primary={true}
                 disabled={this.state.isLoading}
                 keyboardFocused={true}
@@ -36,12 +48,14 @@ class AcceptRequestDialog extends React.Component {
                 title="Accept valentine request"
                 actions={dialogActions}
                 open={this.props.isOpen}
+                modal={this.state.isLoading}
                 contentStyle={{width: '400px'}}
                 onRequestClose={() => this.props.toggleDialogFn(false)} >
                 <TextField
                     floatingLabelText={<RequiredLabelText label="Requester's ethereum address" />}
                     errorText={this.state.acceptRequestFormErrMsgs.requesterAddress}
                     value={this.state.form.requesterAddress}
+                    disabled={this.state.isLoading}
                     onChange={e => this._onUpdateForm('requesterAddress', e.target.value)}
                     onKeyUp={this._onKeyUp.bind(this)} />
                 <div className="pt3">{this.state.acceptRequestFormErrMsgs.general}</div>
@@ -56,6 +70,7 @@ class AcceptRequestDialog extends React.Component {
     async _onAcceptRequestClickAsync() {
         this.setState({
             isLoading: true,
+            isValidating: true,
         });
 
         const acceptRequestFormErrMsgs = {
@@ -88,13 +103,16 @@ class AcceptRequestDialog extends React.Component {
         }
 
         const hasErrors = _.some(acceptRequestFormErrMsgs, (value, key) => value !== '');
+        this.setState({
+            acceptRequestFormErrMsgs,
+            isValidating: false,
+        });
         if (hasErrors) {
             this.setState({
-                acceptRequestFormErrMsgs,
                 isLoading: false,
             });
         } else {
-            this.props.blockchainState.acceptValentineRequestAsync(requesterAddress);
+            await this.props.blockchainState.acceptValentineRequestAsync(requesterAddress);
             this.props.toggleDialogFn(false);
             this.setState({
                 form: this._getEmptyAcceptRequestObj(),
