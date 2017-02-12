@@ -5,6 +5,7 @@ import BlockchainState from 'js/blockchain_state';
 import RequestFeed from 'js/components/sub_components/request_feed';
 import NewRequestDialog from 'js/components/sub_components/new_request_dialog';
 import AcceptRequestDialog from 'js/components/sub_components/accept_request_dialog';
+import PublicNodeNoticeDialog from 'js/components/sub_components/public_node_notice_dialog';
 import Loading from 'js/components/sub_components/loading';
 import Error from 'js/components/sub_components/error';
 import ProviderMenu from 'js/components/sub_components/provider_menu';
@@ -18,6 +19,7 @@ class Home extends React.Component {
         this.state = {
             isNewRequestDialogOpen: false,
             isAcceptRequestDialogOpen: false,
+            isPublicNodeNoticeDialogOpen: false,
         };
     }
     componentDidMount() {
@@ -82,6 +84,9 @@ class Home extends React.Component {
                             isOpen={this.state.isAcceptRequestDialogOpen}
                             blockchainState={this.props.blockchainState}
                             toggleDialogFn={this._acceptRequestDialogToggle.bind(this)} />
+                        <PublicNodeNoticeDialog
+                            isOpen={this.state.isPublicNodeNoticeDialogOpen}
+                            toggleDialogFn={isOpen => this._publicNodeNoticeDialogToggle(isOpen)} />
                     </div>
                 }
             </Paper>
@@ -109,6 +114,11 @@ class Home extends React.Component {
     _acceptRequestDialogToggle(isOpen) {
         this.setState({
             isAcceptRequestDialogOpen: isOpen,
+        });
+    }
+    _publicNodeNoticeDialogToggle(isOpen) {
+        this.setState({
+            isPublicNodeNoticeDialogOpen: isOpen,
         });
     }
     _renderValentineFeed(hasBlockchainErr) {
