@@ -137,6 +137,7 @@ contract('ValentineRegistry', accounts => {
     const owner = accounts[0];
     const nonOwner = accounts[1];
     const anotherNonOwner = accounts[2];
+    const newOwner = accounts[3];
 
     it('should cash out entire contract balance when owner calls cashout', async () => {
         const sufficientValue = web3.toWei(0.1, 'ether');
@@ -180,6 +181,30 @@ contract('ValentineRegistry', accounts => {
         const balanceAfter = web3.eth.getBalance(registry.address);
         const balanceAfterInEther = web3.fromWei(balanceAfter, 'ether').toString();
         assert.equal(balanceAfterInEther, 0.1);
+    });
+
+    it('should let current owner change contract owner', async () => {
+        const result = await registry.updateOwner(newOwner, {
+            from: owner,
+        });
+
+        const currentOwner = await registry.owner.call({from: anotherNonOwner});
+        assert.equal(currentOwner, newOwner, 'owner should be set to newOwner');
+    });
+
+    it('should not let non-owner change contract owner', async () => {
+        try {
+            const result = await registry.updateOwner(anotherNonOwner, {
+                from: nonOwner,
+            });
+            assert(false, 'Expected cashout to throw called by non-owner.');
+        } catch(err) {
+            if (didContractThrow(err)) {
+                // let test pass
+            } else {
+                assert(false, err + '');
+            }
+        }
     });
 });
 

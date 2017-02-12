@@ -105,6 +105,12 @@ contract ValentineRegistry {
         return (r.requesterName, r.valentineName, r.customMessage, r.wasAccepted, r.valentineAddress, requesterAddress);
     }
 
+    function updateOwner(address newOwner)
+        restricted
+        public {
+        owner = newOwner;
+    }
+
     function cashout(address recipient)
         restricted
         public {
