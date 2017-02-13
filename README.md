@@ -1,6 +1,8 @@
 The Love Chain Project
 ------------------------------------
 
+[![Join the chat at https://gitter.im/love_chain_project/Lobby](https://badges.gitter.im/love_chain_project/Lobby.svg)](https://gitter.im/love_chain_project/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 A decentralized valentine registry built on Ethereum
 
 Have any questions? Find us at: https://gitter.im/love_chain_project/Lobby#
