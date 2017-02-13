@@ -1,7 +1,6 @@
 import 'babel-polyfill';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Router, Route, IndexRoute, hashHistory} from 'react-router';
 import App from 'js/components/app';
 import Home from 'js/components/pages/home';
 import injectTapEventPlugin from 'react-tap-event-plugin';
@@ -19,9 +18,7 @@ import 'basscss-border-colors/css/border-colors.css';
 import 'less/all.less';
 
 ReactDOM.render(
-    <Router history={hashHistory}>
-      <Route path="/" component={App}>
-        <IndexRoute component={Home} />
-      </Route>
-    </Router>
-, document.getElementById('app'));
+    <App>
+        <Home/>
+    </App>
+    , document.getElementById('app'));

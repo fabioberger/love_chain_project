@@ -1,7 +1,6 @@
 import _ from 'lodash';
 import React from 'react';
 import classNames from 'classnames';
-import {Link} from 'react-router';
 import {MuiThemeProvider, getMuiTheme, colors} from 'material-ui/styles';
 import utils from 'js/utils/utils';
 import BlockchainState from 'js/blockchain_state';
@@ -35,13 +34,9 @@ class App extends React.Component {
                     <div className="mx-auto max-width-4 relative" style={{height: 110}}>
                         <div className="mx-auto">
                             <div
-                                className="h1 xsm-h1 center"
+                                className="h1 xsm-h1 center white-text"
                                 style={{fontFamily: 'Pacifico, cursive'}} >
-                                <Link
-                                    className="text-decoration-none white-text"
-                                    to="/">
-                                    Happy Crypto Valetines Day!
-                                </Link>
+                                Happy Crypto Valetines Day!
                             </div>
                             <div className="white-text p2 center">
                                 Declare your love immutably on the blockchain

@@ -1,6 +1,5 @@
 import React from 'react';
 import Isvg from 'react-inlinesvg';
-import {Link} from 'react-router';
 import {colors} from 'material-ui/styles';
 import ReactTooltip from 'react-tooltip';
 import configs from 'js/utils/configs';
