@@ -40,7 +40,7 @@ class Home extends React.Component {
             <Paper style={style} zDepth={3}>
                 <div className="pl2 pr2 pt3 clearfix">
                     <div className="hostedBadge">
-                        <a target="_blank" href={configs.ETHERSCAN_MAINNET_URL}>
+                        <a className="text-decoration-none" target="_blank" href={configs.ETHERSCAN_MAINNET_URL}>
                         <div>
                             <img style={{width: '50px'}} src="imgs/ethereum_icon.png" />
                         </div>
