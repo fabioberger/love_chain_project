@@ -191,7 +191,7 @@ class BlockchainState extends EventEmitter2 {
                     this._err = 'CONTRACT_NOT_DEPLOYED_ON_NETWORK';
                 } else {
                     // We show a generic message for other possible caught errors
-                    console.log('Unhandled error encountered: ', err);
+                    console.log('Notice: Unhandled error encountered: ', err);
                     this._err = 'UNHANDLED_ERROR';
                 }
             }
