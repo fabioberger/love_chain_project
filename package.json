@@ -12,6 +12,7 @@
     "Faker": "^0.7.2",
     "basscss": "^8.0.2",
     "classnames": "^2.2.5",
+    "cookies-js": "^1.2.3",
     "deep-equal": "^1.0.1",
     "eventemitter2": "^3.0.0",
     "joi-browser": "^10.0.6",

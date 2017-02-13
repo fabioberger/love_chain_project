@@ -5,6 +5,7 @@ const constants = {
         localNode: 'localNode',
         localWeb3: 'localWeb3',
     },
+    MAINNET_ID: 1,
 };
 
 export default constants;

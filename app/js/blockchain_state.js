@@ -10,9 +10,9 @@ import assert from 'js/utils/assert';
 import ValentineRegistryArtifacts from '../../build/contracts/ValentineRegistry.json';
 import Web3Wrapper from 'js/web3_wrapper';
 import ValentineRequests from 'js/valentine_requests';
-import faker from 'js/utils/faker';
 import Provider from 'js/provider';
 import RequestPoller from 'js/request_poller';
+import FakeRequester from 'js/fake_requester';
 
 class BlockchainState extends EventEmitter2 {
     constructor(onUpdatedFn) {
@@ -31,6 +31,7 @@ class BlockchainState extends EventEmitter2 {
         this._eventNames = utils.keyWords([
             'valentineRequestsUpdated',
         ]);
+        this._fakeRequester = new FakeRequester(this._valentineRequests.add.bind(this._valentineRequests));
         this._onPageLoadInitFireAndForgetAsync();
     }
     hasError() {
@@ -171,9 +172,7 @@ class BlockchainState extends EventEmitter2 {
             try {
                 this._valentineRegistry = await valentineRegistry.deployed();
                 await this._getExistingRequestsAsync();
-                // TODO: Remove these after testing is done
-                // this._createFakeRequests(30);
-                // this._kickoffFakeRequestAdds();
+                this._fakeRequester.start(this._networkId);
                 if (this._provider.doesSupportEventListening()) {
                     this._startWatchingContractForEvents();
                 } else {
@@ -226,18 +225,6 @@ class BlockchainState extends EventEmitter2 {
             return null;
         }
         return request;
-    }
-    _createFakeRequests(num) {
-        _.times(num, () => {
-            const request = faker.createRequest();
-            this._valentineRequests.add(request);
-        });
-    }
-    _kickoffFakeRequestAdds() {
-        setInterval(() => {
-            const request = faker.createRequest();
-            this._valentineRequests.add(request);
-        }, 5000);
     }
     _stopWatchingContractEvents() {
         if (!_.isNull(this._logValentineRequestCreated)) {
