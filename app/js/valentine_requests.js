@@ -11,7 +11,9 @@ class ValentineRequests {
         assert.isSchemaValid(request, 'request');
 
         this._requestsByRequesterAddress[request.requesterAddress] = request;
-        this._orderedRequesterAddresses = [request.requesterAddress, ...this._orderedRequesterAddresses];
+        if (!_.includes(this._orderedRequesterAddresses, request.requesterAddress)) {
+            this._orderedRequesterAddresses = [request.requesterAddress, ...this._orderedRequesterAddresses];
+        }
         this._onUpdatedFn();
     }
     has(requesterAddress) {
