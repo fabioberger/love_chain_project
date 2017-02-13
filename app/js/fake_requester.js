@@ -3,7 +3,7 @@ import Cookies from 'cookies-js';
 import constants from 'js/utils/constants';
 
 const COOKIE_NAME = 'fakeRequests';
-const REQUEST_INTERVAL_MS = 5000;
+const REQUEST_INTERVAL_MS = 8000;
 
 class FakeRequester {
     constructor(addRequestFn) {
