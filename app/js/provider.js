@@ -79,7 +79,7 @@ class Provider {
     }
     // Defaults to Infura.io Testnet
     _getPublicNodeProvider() {
-        const providerObj = new Web3.providers.HttpProvider(configs.INFURA_TESTNET_URL);
+        const providerObj = new Web3.providers.HttpProvider(configs.INFURA_MAINNET_URL);
         return providerObj;
     }
     _getLocalNodeProvider() {
