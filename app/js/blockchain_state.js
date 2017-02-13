@@ -200,7 +200,10 @@ class BlockchainState extends EventEmitter2 {
             this._err = 'DISCONNECTED_FROM_ETHEREUM_NODE';
         }
         this._isLoaded = true;
-        this._onUpdatedFn();
+        const artificialLoadingDelay = 1000;
+        setTimeout(() => {
+            this._onUpdatedFn();
+        }, artificialLoadingDelay);
     }
     async _getExistingRequestsAsync() {
         this._valentineRequests.clearAll();
