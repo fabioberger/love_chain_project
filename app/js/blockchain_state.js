@@ -171,8 +171,9 @@ class BlockchainState extends EventEmitter2 {
             try {
                 this._valentineRegistry = await valentineRegistry.deployed();
                 await this._getExistingRequestsAsync();
-                this._kickoffFakeRequestAdds();
-                this._createFakeRequests(10);
+                // TODO: Remove these after testing is done
+                // this._createFakeRequests(30);
+                // this._kickoffFakeRequestAdds();
                 if (this._provider.doesSupportEventListening()) {
                     this._startWatchingContractForEvents();
                 } else {
@@ -236,7 +237,7 @@ class BlockchainState extends EventEmitter2 {
         setInterval(() => {
             const request = faker.createRequest();
             this._valentineRequests.add(request);
-        }, 2000);
+        }, 5000);
     }
     _stopWatchingContractEvents() {
         if (!_.isNull(this._logValentineRequestCreated)) {
