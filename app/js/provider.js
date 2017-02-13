@@ -82,7 +82,7 @@ class Provider {
     }
     // Defaults to Infura.io Testnet
     _getPublicNodeProvider() {
-        const providerObj = this._makeProvider(configs.INFURA_TESTNET_URL);
+        const providerObj = this._getClientSideFilteringProvider(configs.INFURA_TESTNET_URL);
         return providerObj;
     }
     _getLocalNodeProvider() {
@@ -90,7 +90,7 @@ class Provider {
         return providerObj;
     }
 
-    _makeProvider(rpcUrl) {
+    _getClientSideFilteringProvider(rpcUrl) {
         let engine = new ProviderEngine();
         engine.addProvider(new FilterSubprovider());
         engine.addProvider(new RpcSubprovider({
