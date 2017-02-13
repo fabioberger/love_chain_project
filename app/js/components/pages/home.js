@@ -2,6 +2,7 @@ import _ from 'lodash';
 import React from 'react';
 import {RaisedButton, Paper} from 'material-ui';
 import {colors} from 'material-ui/styles';
+import ReactTooltip from 'react-tooltip';
 import BlockchainState from 'js/blockchain_state';
 import configs from 'js/utils/configs';
 import RequestFeed from 'js/components/sub_components/request_feed';
@@ -13,7 +14,6 @@ import Error from 'js/components/sub_components/error';
 import ProviderMenu from 'js/components/sub_components/provider_menu';
 import OutLink from 'js/components/sub_components/out_link';
 import CopyableAddress from 'js/components/sub_components/copyable_address';
-import ReactTooltip from 'react-tooltip';
 
 class Home extends React.Component {
     static propTypes = {
@@ -44,7 +44,7 @@ class Home extends React.Component {
             <Paper style={style} zDepth={3}>
                 <div className="px2 pt3 clearfix">
                     <div className="hostedBadge">
-                        <OutLink className="text-decoration-none" href={configs.ETHERSCAN_MAINNET_URL}>
+                        <OutLink href={configs.ETHERSCAN_MAINNET_URL}>
                         <div>
                             <img style={{width: '50px'}} src="imgs/ethereum_icon.png" />
                         </div>
