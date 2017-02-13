@@ -53,7 +53,7 @@ class Web3Wrapper extends EventEmitter2 {
 
         try {
             const networkId = await this.callAsync('version.getNetwork');
-            return networkId;
+            return Number(networkId);
         } catch(err) {
             return null;
         }
