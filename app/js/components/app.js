@@ -5,6 +5,7 @@ import {Link} from 'react-router';
 import {MuiThemeProvider, getMuiTheme, colors} from 'material-ui/styles';
 import utils from 'js/utils/utils';
 import BlockchainState from 'js/blockchain_state';
+import SearchBox from 'js/components/sub_components/search_box';
 
 class App extends React.Component {
     componentWillMount() {
@@ -30,19 +31,28 @@ class App extends React.Component {
         return (
             <MuiThemeProvider muiTheme={muiTheme}>
                 <div>
-                    <div className="center clearfix">
-                        <div className="h1 xsm-h1" style={{fontFamily: 'Pacifico, cursive'}}>
-                            <Link className="text-decoration-none white-text" to="/">Happy Crypto Valetines Day!</Link>
-                        </div>
-                        <div className="white-text p2">
-                            Declare your love immutably on the blockchain
-                        </div>
-                    </div>
-                    <div className="mx-auto max-width-4 mainContent">
-                        <div className="clearfix">
-                            <div className="center">
-                                {childrenWithProps}
+                    <div className="mx-auto max-width-4 relative" style={{height: 110}}>
+                        <div className="mx-auto">
+                            <div
+                                className="h1 xsm-h1 center"
+                                style={{fontFamily: 'Pacifico, cursive'}} >
+                                <Link
+                                    className="text-decoration-none white-text"
+                                    to="/">
+                                    Happy Crypto Valetines Day!
+                                </Link>
                             </div>
+                            <div className="white-text p2 center">
+                                Declare your love immutably on the blockchain
+                            </div>
+                        </div>
+                        <div className="search pl3">
+                            <SearchBox
+                                style={{position: 'absolute', bottom: 14}}
+                            />
+                        </div>
+                        <div className="center">
+                            {childrenWithProps}
                         </div>
                     </div>
                 </div>
