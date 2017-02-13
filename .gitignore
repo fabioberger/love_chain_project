@@ -1,7 +1,6 @@
 node_modules
 app/public/bundle.js
 .DS_Store
-build
 test
 TODO.md
 useful.txt
