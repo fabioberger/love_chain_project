@@ -157,7 +157,7 @@ class BlockchainState extends EventEmitter2 {
             this._requestPoller.stop();
             this._requestPoller = null;
         }
-        this._wrappedWeb3.removeNetworkConnectionListener(this._networkConnectionChangedAsync.bind(this));
+        this._wrappedWeb3.destroy();
         this._wrappedWeb3 = null;
         this._valentineRegistry = null;
         this._networkId = null;

@@ -135,6 +135,7 @@ class Web3Wrapper extends EventEmitter2 {
         return {methodInstance, web3SubObj};
     }
     destroy() {
+        this.removeAllListeners(this._eventNames.networkConnection);
         this._stopEmittingNetworkConnectionStateAsync();
     }
 }
