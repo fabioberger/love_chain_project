@@ -12,6 +12,7 @@ import Web3Wrapper from 'js/web3_wrapper';
 import ValentineRequests from 'js/valentine_requests';
 import faker from 'js/utils/faker';
 import Provider from 'js/provider';
+import RequestPoller from 'js/request_poller';
 
 class BlockchainState extends EventEmitter2 {
     constructor(onUpdatedFn) {
@@ -26,6 +27,7 @@ class BlockchainState extends EventEmitter2 {
         this._logValentineRequestCreated = null;
         this._logRequestAccepted = null;
         this._provider = null;
+        this._requestPoller = null;
         this._eventNames = utils.keyWords([
             'valentineRequestsUpdated',
         ]);
@@ -58,8 +60,7 @@ class BlockchainState extends EventEmitter2 {
         this._isLoaded = false;
         this._onUpdatedFn();
 
-        this._stopWatchingContractEvents();
-        this._wrappedWeb3.removeNetworkConnectionListener(this._networkConnectionChangedAsync.bind(this));
+        this._destroyContractAsync();
 
         this._provider.updateProvider(providerType);
 
@@ -150,6 +151,17 @@ class BlockchainState extends EventEmitter2 {
 
         await this._instantiateContractAsync();
     }
+    async _destroyContractAsync() {
+        this._stopWatchingContractEvents();
+        if (this._requestPoller) {
+            this._requestPoller.stop();
+            this._requestPoller = null;
+        }
+        this._wrappedWeb3.removeNetworkConnectionListener(this._networkConnectionChangedAsync.bind(this));
+        this._wrappedWeb3 = null;
+        this._valentineRegistry = null;
+        this._networkId = null;
+    }
     async _instantiateContractAsync() {
         this._networkId = await this._wrappedWeb3.getNetworkIdIfExists();
         const doesNetworkExist = !_.isNull(this._networkId);
@@ -163,6 +175,15 @@ class BlockchainState extends EventEmitter2 {
                 this._createFakeRequests(10);
                 if (this._provider.doesSupportEventListening()) {
                     this._startWatchingContractForEvents();
+                } else {
+                    // Since some providers (e.g Infura.io) do not support watching contracts for
+                    // events, we have to fallback to polling for new Valentine requests for users
+                    // using these providers.
+                    const numRequesters = await this._valentineRegistry.numRequesters.call();
+                    this._requestPoller = new RequestPoller(numRequesters.toNumber(),
+                        this._valentineRequests.add.bind(this._valentineRequests),
+                        this._getRequestByIndexIfExistsAsync.bind(this));
+                    this._requestPoller.start();
                 }
             } catch(err) {
                 const errMsg = `${err}`;
@@ -186,10 +207,21 @@ class BlockchainState extends EventEmitter2 {
 
         const numRequesters = await this._valentineRegistry.numRequesters.call();
         for(let i = 0; i < numRequesters.toNumber(); i++) {
-            const requestArr = await this._valentineRegistry.getRequestByIndex.call(i);
-            const request = this._convertRequestArrToObj(requestArr);
-            this._valentineRequests.add(request);
+            const request = await this._getRequestByIndexIfExistsAsync(i);
+            if (request) {
+                this._valentineRequests.add(request);
+            }
         }
+    }
+    async _getRequestByIndexIfExistsAsync(index) {
+        let request;
+        try {
+            const requestArr = await this._valentineRegistry.getRequestByIndex.call(index);
+            request = this._convertRequestArrToObj(requestArr);
+        } catch(err) {
+            return null;
+        }
+        return request;
     }
     _createFakeRequests(num) {
         _.times(num, () => {
