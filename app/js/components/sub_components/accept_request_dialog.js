@@ -55,6 +55,7 @@ class AcceptRequestDialog extends React.Component {
                 modal={this.state.isLoading}
                 contentStyle={{width: '400px'}}
                 onRequestClose={() => this.props.toggleDialogFn(false)} >
+                <div className="pb3">{this.state.acceptRequestFormErrMsgs.general}</div>
                 <div className="block mt1">
                     <TextField
                         floatingLabelText={<RequiredLabelText label="Requester's ethereum address" />}
@@ -66,7 +67,6 @@ class AcceptRequestDialog extends React.Component {
                     {' '}
                     <HelpTooltip explanation={requesterAddressExplanation} />
                 </div>
-                <div className="pt3">{this.state.acceptRequestFormErrMsgs.general}</div>
             </Dialog>
         );
     }
