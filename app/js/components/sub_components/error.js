@@ -2,14 +2,15 @@ import _ from 'lodash';
 import React from 'react';
 import {Paper} from 'material-ui';
 import configs from 'js/utils/configs';
+import OutLink from 'js/components/sub_components/out_link';
 
 const errorTypeToMessage = {
     NO_WEB3_INSTANCE_FOUND: (
         <span>
             We did not find a web3 instance on the page. Install{' '}
-            <a target="_blank" href={configs.METAMASK_CHROME_STORE_URL}>
+            <OutLink href={configs.METAMASK_CHROME_STORE_URL}>
                 Metamask
-            </a> or visit this page in the <a target="_blank" href={configs.MIST_DOWNLOAD_URL}>Mist browser</a>.
+            </OutLink> or visit this page in the <OutLink href={configs.MIST_DOWNLOAD_URL}>Mist browser</OutLink>.
         </span>
     ),
     DISCONNECTED_FROM_ETHEREUM_NODE: (

@@ -10,6 +10,7 @@ import PublicNodeNoticeDialog from 'js/components/sub_components/public_node_not
 import Loading from 'js/components/sub_components/loading';
 import Error from 'js/components/sub_components/error';
 import ProviderMenu from 'js/components/sub_components/provider_menu';
+import OutLink from 'js/components/sub_components/out_link';
 
 class Home extends React.Component {
     static propTypes = {
@@ -40,12 +41,12 @@ class Home extends React.Component {
             <Paper style={style} zDepth={3}>
                 <div className="pl2 pr2 pt3 clearfix">
                     <div className="hostedBadge">
-                        <a className="text-decoration-none" target="_blank" href={configs.ETHERSCAN_MAINNET_URL}>
+                        <OutLink className="text-decoration-none" href={configs.ETHERSCAN_MAINNET_URL}>
                         <div>
                             <img style={{width: '50px'}} src="imgs/ethereum_icon.png" />
                         </div>
                         <div className="h5">Hosted on Ethereum</div>
-                        </a>
+                        </OutLink>
                     </div>
                     <div className="ml2 actionButtons">
                         <div className="pb2">

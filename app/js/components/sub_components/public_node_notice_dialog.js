@@ -2,6 +2,7 @@ import React from 'react';
 import {Dialog, FlatButton} from 'material-ui';
 import {colors} from 'material-ui/styles';
 import configs from 'js/utils/configs';
+import OutLink from 'js/components/sub_components/out_link';
 
 const PublicNodeNoticeDialog = props => {
     const dialogActions = [
@@ -28,9 +29,9 @@ const PublicNodeNoticeDialog = props => {
                 <h4>1. Chrome extension ethereum wallet</h4>
                 <div>
                     You can install a chrome extension ethereum wallet such as{' '}
-                    <a href={configs.METAMASK_CHROME_STORE_URL} target="_blank">
+                    <OutLink href={configs.METAMASK_CHROME_STORE_URL}>
                         Metamask
-                    </a>. Once installed and set up, send a small amount of ether to one of the
+                    </OutLink>. Once installed and set up, send a small amount of ether to one of the
                     wallet addresses and refresh this page.
                 </div>
                 <h4>2. Use the Mist browser</h4>
