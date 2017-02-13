@@ -6,6 +6,7 @@ import {MuiThemeProvider, getMuiTheme, colors} from 'material-ui/styles';
 import utils from 'js/utils/utils';
 import BlockchainState from 'js/blockchain_state';
 import SearchBox from 'js/components/sub_components/search_box';
+import Footer from 'js/components/sub_components/footer';
 
 class App extends React.Component {
     componentWillMount() {
@@ -54,6 +55,7 @@ class App extends React.Component {
                         <div className="center">
                             {childrenWithProps}
                         </div>
+                        <Footer />
                     </div>
                 </div>
             </MuiThemeProvider>
