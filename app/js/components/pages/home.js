@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import React from 'react';
 import {RaisedButton, Paper} from 'material-ui';
+import {colors} from 'material-ui/styles';
 import BlockchainState from 'js/blockchain_state';
 import configs from 'js/utils/configs';
 import RequestFeed from 'js/components/sub_components/request_feed';
@@ -11,6 +12,8 @@ import Loading from 'js/components/sub_components/loading';
 import Error from 'js/components/sub_components/error';
 import ProviderMenu from 'js/components/sub_components/provider_menu';
 import OutLink from 'js/components/sub_components/out_link';
+import CopyableAddress from 'js/components/sub_components/copyable_address';
+import ReactTooltip from 'react-tooltip';
 
 class Home extends React.Component {
     static propTypes = {
@@ -39,7 +42,7 @@ class Home extends React.Component {
         const hasBlockchainErr = this.props.blockchainState.hasError();
         return (
             <Paper style={style} zDepth={3}>
-                <div className="pl2 pr2 pt3 clearfix">
+                <div className="px2 pt3 clearfix">
                     <div className="hostedBadge">
                         <OutLink className="text-decoration-none" href={configs.ETHERSCAN_MAINNET_URL}>
                         <div>
@@ -77,6 +80,55 @@ class Home extends React.Component {
                         <Loading message="Connecting to the blockchain..." /> :
                         this._renderValentineFeed(hasBlockchainErr)
                     }
+                </div>
+                <div className="mx4 mb4 left-align" style={{color: colors.grey700}}>
+                    <h1 className="center">About</h1>
+                    <h3>What is Ethereum?</h3>
+                    <div>
+                        <OutLink href={configs.ETHEREUM_ORG_URL}>Ethereum</OutLink>{` is a blockchain technology
+                            similar to Bitcoin that let's people build decentralized
+                            applications (Dapps) with ease. Dapps (like this one!) allow individuals
+                            to interact with one another over the blockchain without a trusted
+                            third-party (i.e I cannot change or take down your valentine requests, so
+                            be responsible!).`}
+                    </div>
+                    <h3 className="mt3">Look ma, no backend!</h3>
+                    <div>
+                        {`This app is "hosted on Ethereum". This means it is a front-end app
+                        that runs entirely in your browser without a backing server. Instead it reads and
+                        writes valentine requests directly to/from the blockchain via this `}
+                        {<OutLink href={configs.ETHERSCAN_MAINNET_URL}>smart contract</OutLink>}.
+                        {` If you wanted, you could download and install an Ethereum node onto your own
+                         computer and use it with this Dapp!`}
+                    </div>
+                    <h3 className="mt3">Cause</h3>
+                    <div>
+                        {`Sending a valentine request to your loved ones will cost a small donation (`}
+                        <span className="bold" data-tip data-for="donationTooltip">0.1 ETH</span>
+                        {`) and
+                        some gas (`}
+                        <span className="bold" data-tip data-for="gasTooltip">~0.003 ETH</span>
+                        {`) to send it into the network. All the proceeds from this project
+                        are going towards teaching refugees in Germany how to code. Many have fled their
+                        homeland in hopes of a brighter future and are hungry to learn new skills and start
+                        contributing to society. Let's help them do that.`}
+                        <ReactTooltip id="donationTooltip">Worth about €1.05 at time of writing</ReactTooltip>
+                        <ReactTooltip id="gasTooltip">Worth about €0.03 at time of writing</ReactTooltip>
+                    </div>
+                    <div className="pt2">
+                        Any additional donations can be sent directly to:{' '}
+                        <CopyableAddress address="0x4757e41730892E288aC2B09bE5882D422a8DfEb5" />
+                    </div>
+                    <h3 className="mt3">Special thanks</h3>
+                    <div>
+                        Special thanks to these incredible projects and the people behind them!
+                    </div>
+                    <ul>
+                        <li><OutLink href={configs.TRUFFLE_FRAMEWORK_URL}>The truffle framework</OutLink></li>
+                        <li><OutLink href={configs.METAMASK_URL}>Metamask</OutLink></li>
+                        <li><OutLink href={configs.INFURA_URL}>Infura</OutLink></li>
+                        <li><OutLink href={configs.ETHEREUM_ORG_URL}>Ethereum foundation</OutLink></li>
+                    </ul>
                 </div>
                 {(isLoaded && !hasBlockchainErr) &&
                     <div>
