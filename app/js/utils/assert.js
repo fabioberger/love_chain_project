@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import validator from 'js/schemas/validator';
+import schemaValidator from 'js/utils/schema_validator';
 
 const assert = (condition, message) => {
     if (!condition) {
@@ -23,7 +23,7 @@ assert.isSchemaValid = (instance, schemaName) => {
     assert.isObject(instance);
     assert.isString(schemaName);
 
-    const validationErrs = validator.getValidationErrorsIfExists(instance, schemaName);
+    const validationErrs = schemaValidator.getValidationErrorsIfExists(instance, schemaName);
     if (!_.isNull(validationErrs)) {
         console.log('Schema validation failed for: ', instance);
         throw validationErrs;

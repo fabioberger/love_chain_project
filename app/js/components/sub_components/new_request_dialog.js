@@ -6,7 +6,7 @@ import BlockchainState from 'js/blockchain_state';
 import HelpTooltip from 'js/components/sub_components/help_tooltip';
 import RequiredLabelText from 'js/components/sub_components/required_label_text';
 import LoadingMini from 'js/components/sub_components/loading_mini';
-import validator from 'js/schemas/validator';
+import schemaValidator from 'js/utils/schema_validator';
 
 class NewRequestDialog extends React.Component {
     static propTypes = {
@@ -120,7 +120,7 @@ class NewRequestDialog extends React.Component {
         }
         completeRequest.wasAccepted = false;
         completeRequest.requesterAddress = this.props.blockchainState.getFirstAccountIfExists();
-        const validationErrs = validator.getValidationErrorsIfExists(completeRequest, 'request');
+        const validationErrs = schemaValidator.getValidationErrorsIfExists(completeRequest, 'request');
 
         if (!_.isNull(validationErrs)) {
             _.each(validationErrs.details, validationErr => {

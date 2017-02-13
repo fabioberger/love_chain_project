@@ -7,7 +7,7 @@ const nameToSchema = {
     'request': RequestSchema,
 };
 
-const validator = {
+const schemaValidator = {
     getValidationErrorsIfExists(instance, schemaName) {
         assert.isObject(instance);
         assert.isString(schemaName);
@@ -30,4 +30,4 @@ const validator = {
     },
 }
 
-export default validator;
+export default schemaValidator;
