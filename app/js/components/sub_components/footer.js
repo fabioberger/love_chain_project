@@ -35,8 +35,4 @@ const Footer = props => {
     );
 }
 
-// <div className="inline">
-//     <Link to="/about">About me</Link>
-// </div>
-
 export default Footer;
