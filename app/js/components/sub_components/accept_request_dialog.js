@@ -4,6 +4,7 @@ import {Dialog, FlatButton, TextField} from 'material-ui';
 import BlockchainState from 'js/blockchain_state';
 import LoadingMini from 'js/components/sub_components/loading_mini';
 import RequiredLabelText from 'js/components/sub_components/required_label_text';
+import HelpTooltip from 'js/components/sub_components/help_tooltip';
 
 class AcceptRequestDialog extends React.Component {
     static propTypes = {
@@ -43,6 +44,9 @@ class AcceptRequestDialog extends React.Component {
                 onTouchTap={this._onAcceptRequestClickAsync.bind(this)} />,
         ];
 
+        const requesterAddressExplanation = 'Ethereum address belonging to the person who sent you the request. \
+            You can copy-paste the address next to their name in the valentine request feed.';
+
         return (
             <Dialog
                 title="Accept valentine request"
@@ -51,13 +55,17 @@ class AcceptRequestDialog extends React.Component {
                 modal={this.state.isLoading}
                 contentStyle={{width: '400px'}}
                 onRequestClose={() => this.props.toggleDialogFn(false)} >
-                <TextField
-                    floatingLabelText={<RequiredLabelText label="Requester's ethereum address" />}
-                    errorText={this.state.acceptRequestFormErrMsgs.requesterAddress}
-                    value={this.state.form.requesterAddress}
-                    disabled={this.state.isLoading}
-                    onChange={e => this._onUpdateForm('requesterAddress', e.target.value)}
-                    onKeyUp={this._onKeyUp.bind(this)} />
+                <div className="block mt1">
+                    <TextField
+                        floatingLabelText={<RequiredLabelText label="Requester's ethereum address" />}
+                        errorText={this.state.acceptRequestFormErrMsgs.requesterAddress}
+                        value={this.state.form.requesterAddress}
+                        disabled={this.state.isLoading}
+                        onChange={e => this._onUpdateForm('requesterAddress', e.target.value)}
+                        onKeyUp={this._onKeyUp.bind(this)} />
+                    {' '}
+                    <HelpTooltip explanation={requesterAddressExplanation} />
+                </div>
                 <div className="pt3">{this.state.acceptRequestFormErrMsgs.general}</div>
             </Dialog>
         );
