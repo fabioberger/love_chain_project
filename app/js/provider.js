@@ -3,6 +3,9 @@ import Web3 from 'web3';
 import assert from 'js/utils/assert';
 import configs from 'js/utils/configs';
 import constants from 'js/utils/constants';
+import ProviderEngine from 'web3-provider-engine';
+import FilterSubprovider from 'web3-provider-engine/subproviders/filters.js';
+import RpcSubprovider from 'web3-provider-engine/subproviders/rpc.js';
 
 class Provider {
     constructor() {
@@ -40,15 +43,15 @@ class Provider {
         this._assertProviderType(providerType);
         return this._providerTypesToNames[providerType];
     }
-    doesSupportEventListening() {
-        return configs.PROVIDER_CONFIGS[this._providerType].doesSupportEventListening;
-    }
     canSendTransactions() {
         return configs.PROVIDER_CONFIGS[this._providerType].canSendTransactions;
     }
     updateProvider(newProviderType) {
         this._assertProviderType(newProviderType);
 
+        if (this._providerObj.stop) {
+            this._providerObj.stop();
+        }
         //If current provider is localWeb3, we need to save the provider instance so we could switch
         // back to it later
         const currentProviderType = this._providerType;
@@ -79,13 +82,24 @@ class Provider {
     }
     // Defaults to Infura.io Testnet
     _getPublicNodeProvider() {
-        const providerObj = new Web3.providers.HttpProvider(configs.INFURA_MAINNET_URL);
+        const providerObj = this._getClientSideFilteringProvider(configs.INFURA_MAINNET_URL);
         return providerObj;
     }
     _getLocalNodeProvider() {
         const providerObj = new Web3.providers.HttpProvider(configs.LOCALHOST_URL);
         return providerObj;
     }
+
+    _getClientSideFilteringProvider(rpcUrl) {
+        let engine = new ProviderEngine();
+        engine.addProvider(new FilterSubprovider());
+        engine.addProvider(new RpcSubprovider({
+            rpcUrl: rpcUrl,
+        }));
+        engine.start();
+        return engine;
+    }
+
     _discoverLocalWeb3ProviderName() {
         if (this._providerObj.isMetaMask) {
             return 'Metamask';

@@ -11,7 +11,6 @@ import ValentineRegistryArtifacts from '../../build/contracts/ValentineRegistry.
 import Web3Wrapper from 'js/web3_wrapper';
 import ValentineRequests from 'js/valentine_requests';
 import Provider from 'js/provider';
-import RequestPoller from 'js/request_poller';
 import FakeRequester from 'js/fake_requester';
 
 class BlockchainState extends EventEmitter2 {
@@ -27,7 +26,6 @@ class BlockchainState extends EventEmitter2 {
         this._logValentineRequestCreated = null;
         this._logRequestAccepted = null;
         this._provider = null;
-        this._requestPoller = null;
         this._eventNames = utils.keyWords([
             'valentineRequestsUpdated',
         ]);
@@ -154,10 +152,6 @@ class BlockchainState extends EventEmitter2 {
     }
     async _destroyContractAsync() {
         this._stopWatchingContractEvents();
-        if (this._requestPoller) {
-            this._requestPoller.stop();
-            this._requestPoller = null;
-        }
         this._wrappedWeb3.destroy();
         this._wrappedWeb3 = null;
         this._valentineRegistry = null;
@@ -173,18 +167,7 @@ class BlockchainState extends EventEmitter2 {
                 this._valentineRegistry = await valentineRegistry.deployed();
                 await this._getExistingRequestsAsync();
                 this._fakeRequester.start(this._networkId);
-                if (this._provider.doesSupportEventListening()) {
-                    this._startWatchingContractForEvents();
-                } else {
-                    // Since some providers (e.g Infura.io) do not support watching contracts for
-                    // events, we have to fallback to polling for new Valentine requests for users
-                    // using these providers.
-                    const numRequesters = await this._valentineRegistry.numRequesters.call();
-                    this._requestPoller = new RequestPoller(numRequesters.toNumber(),
-                        this._valentineRequests.add.bind(this._valentineRequests),
-                        this._getRequestByIndexIfExistsAsync.bind(this));
-                    this._requestPoller.start();
-                }
+                this._startWatchingContractForEvents();
             } catch(err) {
                 const errMsg = `${err}`;
                 if (_.includes(errMsg, 'not been deployed to detected network')) {
