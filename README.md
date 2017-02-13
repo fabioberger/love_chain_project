@@ -3,6 +3,8 @@ The Love Chain Project
 
 A decentralized valentine registry built on Ethereum
 
+Have any questions? Find us at: https://gitter.im/love_chain_project/Lobby#
+
 # Front-end Dev Setup
 
 `npm install`

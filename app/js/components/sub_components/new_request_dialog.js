@@ -57,8 +57,8 @@ class NewRequestDialog extends React.Component {
                 modal={this.state.isLoading}
                 onRequestClose={() => this.props.toggleDialogFn(false)}
                 autoScrollBodyContent={true} >
-                <div className="pb2">{this.state.requestFormErrMsgs.general}</div>
                 <TextField
+                    id="innerScrollDivMarker"
                     className="block"
                     floatingLabelText={<RequiredLabelText label="Your first name" />}
                     errorText={this.state.requestFormErrMsgs.requesterName}
@@ -93,6 +93,7 @@ class NewRequestDialog extends React.Component {
                     {' '}
                     <HelpTooltip explanation={valentineAddressExplanation} />
                 </div>
+                <div className="pt2">{this.state.requestFormErrMsgs.general}</div>
             </Dialog>
         );
     }
@@ -157,6 +158,9 @@ class NewRequestDialog extends React.Component {
             this.setState({
                 isLoading: false,
             });
+            // Hack: Scroll to bottom
+            const scrollDivElement = document.getElementById('innerScrollDivMarker').parentNode.parentNode;
+            scrollDivElement.scrollTop = scrollDivElement.scrollHeight;
         } else {
             await this.props.blockchainState.createValentineRequestAsync(completeRequest);
             this.props.toggleDialogFn(false);

@@ -54,9 +54,9 @@ class AcceptRequestDialog extends React.Component {
                 open={this.props.isOpen}
                 modal={this.state.isLoading}
                 contentStyle={{width: '400px'}}
-                onRequestClose={() => this.props.toggleDialogFn(false)} >
-                <div className="pb3">{this.state.acceptRequestFormErrMsgs.general}</div>
-                <div className="block mt1">
+                onRequestClose={() => this.props.toggleDialogFn(false)}
+                autoScrollBodyContent={true} >
+                <div className="block mt1" id="innerScrollDivMarker">
                     <TextField
                         floatingLabelText={<RequiredLabelText label="Requester's ethereum address" />}
                         errorText={this.state.acceptRequestFormErrMsgs.requesterAddress}
@@ -67,6 +67,7 @@ class AcceptRequestDialog extends React.Component {
                     {' '}
                     <HelpTooltip explanation={requesterAddressExplanation} />
                 </div>
+                <div className="pt2">{this.state.acceptRequestFormErrMsgs.general}</div>
             </Dialog>
         );
     }
@@ -119,6 +120,9 @@ class AcceptRequestDialog extends React.Component {
             this.setState({
                 isLoading: false,
             });
+            // Hack: Scroll to bottom
+            const scrollDivElement = document.getElementById('innerScrollDivMarker').parentNode;
+            scrollDivElement.scrollTop = scrollDivElement.scrollHeight;
         } else {
             await this.props.blockchainState.acceptValentineRequestAsync(requesterAddress);
             this.props.toggleDialogFn(false);

@@ -82,7 +82,7 @@ class Provider {
     }
     // Defaults to Infura.io Testnet
     _getPublicNodeProvider() {
-        const providerObj = this._getClientSideFilteringProvider(configs.INFURA_TESTNET_URL);
+        const providerObj = this._getClientSideFilteringProvider(configs.INFURA_MAINNET_URL);
         return providerObj;
     }
     _getLocalNodeProvider() {

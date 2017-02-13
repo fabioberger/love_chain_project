@@ -119,6 +119,11 @@ class Home extends React.Component {
                         Any additional donations can be sent directly to:{' '}
                         <CopyableAddress address="0x4757e41730892E288aC2B09bE5882D422a8DfEb5" />
                     </div>
+                    <h3>Need help</h3>
+                    <div>
+                        Need help sending or accepting valentine requests? Found a bug? Contact us on{' '}
+                        <OutLink href="https://gitter.im/love_chain_project/Lobby#">Gitter</OutLink>.
+                    </div>
                     <h3 className="mt3">Special thanks</h3>
                     <div>
                         Special thanks to these incredible projects and the people behind them!
