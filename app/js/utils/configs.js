@@ -6,15 +6,12 @@ const configs = {
     LOCALHOST_URL: 'http://localhost:8545',
     PROVIDER_CONFIGS: {
         [constants.PROVIDER_TYPES.publicNode]: {
-            doesSupportEventListening: false,
             canSendTransactions: false,
         },
         [constants.PROVIDER_TYPES.localNode]: {
-            doesSupportEventListening: true,
             canSendTransactions: true,
         },
         [constants.PROVIDER_TYPES.localWeb3]: {
-            doesSupportEventListening: true,
             canSendTransactions: true,
         },
     },

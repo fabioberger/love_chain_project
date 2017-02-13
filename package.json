@@ -30,7 +30,8 @@
     "react-tap-event-plugin": "^2.0.1",
     "react-tooltip": "^3.2.6",
     "truffle-contract": "^1.1.8",
-    "web3": "^0.18.2"
+    "web3": "^0.18.2",
+    "web3-provider-engine": "^8.6.1"
   },
   "devDependencies": {
     "babel-cli": "^6.22.2",
