@@ -28,30 +28,6 @@ class FakeRequester {
             valentineAddress: '0x7WM3N1ZR9HS8X1CTJX9FN2GWNTTD3BLW3088FNLL',
             requesterAddress: '0xJZW51D3JFKWSYY3VYBOH5WIVLWBIJQUIYVRHDKW4'
         },
-        {
-            requesterName: 'Vaughn',
-            valentineName: 'Vincent',
-            customMessage: 'Happy valentine!',
-            wasAccepted: true,
-            valentineAddress: '0xEMK6POKFGL3YK4TXOJRCPX32171YO50SY8XHDUHK',
-            requesterAddress: '0xN3C5RX61HXYMSQ2CG3PNTNQ17D5S9YLG300SQFOF'
-        },
-        {
-            requesterName: 'Carlo',
-            valentineName: 'Kennedy',
-            customMessage: 'Thanks for being a part of my life...',
-            wasAccepted: false,
-            valentineAddress: '0xVHM809YKVIUUPBJZ0VLWR79EHNH7WC8HW9OB7IIG',
-            requesterAddress: '0xNRG8DCJXWB0X5MN0FIBGE2VRFZDR5ZBHYV8ZD720'
-        },
-        {
-            requesterName: 'Bryce',
-            valentineName: 'Ari',
-            customMessage: 'Je t\'aime mon amour. Tu me fait tellement heureuse, j\'ai envie de te revoir bientot!',
-            wasAccepted: true,
-            valentineAddress: '0xQO7WDZMHCZ29G5P5YIU0MV7HH8TM8960N5P0CSCT',
-            requesterAddress: '0xYRFKLRX6QLRNZJ71RRTUIS9WGEGP5BMDS2162SZ6'
-        }
     ]
     start(networkId) {
         if (networkId !== constants.MAINNET_ID) {
