@@ -90,7 +90,7 @@ class Home extends React.Component {
                           an Ethereum address they control, and add it to your request. They will then be the only person who
                           can accept your request!`}
                     </div>
-                    <h3>What is Ethereum?</h3>
+                    <h3 className="mt3">What is Ethereum?</h3>
                     <div>
                         <OutLink href={configs.ETHEREUM_ORG_URL}>Ethereum</OutLink>{` is a blockchain technology
                             similar to Bitcoin that let's people build decentralized
