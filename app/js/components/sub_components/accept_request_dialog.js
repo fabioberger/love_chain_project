@@ -40,7 +40,6 @@ class AcceptRequestDialog extends React.Component {
                 label={(this.state.isLoading && !this.state.isValidating) ? 'Sending...' : 'Accept'}
                 primary={true}
                 disabled={this.state.isLoading}
-                keyboardFocused={true}
                 onTouchTap={this._onAcceptRequestClickAsync.bind(this)} />,
         ];
 

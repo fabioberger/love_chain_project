@@ -41,7 +41,6 @@ class NewRequestDialog extends React.Component {
             <FlatButton
                 label={(this.state.isLoading && !this.state.isValidating) ? 'Sending...' : 'Create'}
                 primary={true}
-                keyboardFocused={true}
                 disabled={this.state.isLoading}
                 onTouchTap={this._onRequestSubmitClickAsync.bind(this)} />,
         ];
