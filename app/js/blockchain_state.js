@@ -70,17 +70,21 @@ class BlockchainState extends EventEmitter2 {
         this._instantiateContractAsync();
     }
     isValidAddress(address) {
+        if (!_.isString(address)) {
+            return false;
+        }
         const lowercaseAddress = address.toLowerCase();
         return this._wrappedWeb3.call('isAddress', lowercaseAddress);
     }
     getValentineRequests() {
         return this._valentineRequests.getAll();
     }
-    isRequestTargetedAtUser(valentineAddress) {
-        return valentineAddress === this._wrappedWeb3.getFirstAccountIfExists() || valentineAddress === constants.NULL_ADDRESS;
+    async isRequestTargetedAtUserAsync(valentineAddress) {
+        const firstAccountAddress = await this._wrappedWeb3.getFirstAccountIfExistsAsync();
+        return valentineAddress === firstAccountAddress || valentineAddress === constants.NULL_ADDRESS;
     }
-    getFirstAccountIfExists() {
-        return this._wrappedWeb3.getFirstAccountIfExists();
+    async getFirstAccountIfExistsAsync() {
+        return await this._wrappedWeb3.getFirstAccountIfExistsAsync();
     }
     async createValentineRequestAsync(request) {
         assert.isSchemaValid(request, 'request');
@@ -107,7 +111,7 @@ class BlockchainState extends EventEmitter2 {
     async acceptValentineRequestAsync(requesterAddress) {
         assert(this.isValidAddress(requesterAddress), 'requesterAddress must be valid ethereum address');
 
-        const valentineRequest = this._wrappedWeb3.getFirstAccountIfExists();
+        const valentineRequest = await this._wrappedWeb3.getFirstAccountIfExistsAsync();
         assert(!_.isNull(valentineRequest), 'valentineRequest must be available for a transaction to be sent.');
 
         try {
@@ -123,7 +127,7 @@ class BlockchainState extends EventEmitter2 {
         this._valentineRequests.update(requesterAddress, 'wasAccepted', true);
     }
     async didRequesterAlreadyRequestAsync() {
-        const requesterAddress = this._wrappedWeb3.getFirstAccountIfExists();
+        const requesterAddress = await this._wrappedWeb3.getFirstAccountIfExistsAsync();
         assert(!_.isNull(requesterAddress), 'requesterAddress must exist to check for existing requests.');
 
         const request = await this.getRequestIfExistsAsync(requesterAddress);

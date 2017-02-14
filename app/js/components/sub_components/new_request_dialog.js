@@ -119,7 +119,7 @@ class NewRequestDialog extends React.Component {
             completeRequest.valentineAddress = constants.NULL_ADDRESS;
         }
         completeRequest.wasAccepted = false;
-        completeRequest.requesterAddress = this.props.blockchainState.getFirstAccountIfExists();
+        completeRequest.requesterAddress = await this.props.blockchainState.getFirstAccountIfExistsAsync();
         const validationErrs = schemaValidator.getValidationErrorsIfExists(completeRequest, 'request');
 
         if (!_.isNull(validationErrs)) {

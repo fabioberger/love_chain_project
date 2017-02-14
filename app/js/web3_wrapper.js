@@ -12,10 +12,10 @@ class Web3Wrapper extends EventEmitter2 {
         ];
         this._callbackMethods = [
             'version.getNetwork',
+            'eth.getAccounts',
         ];
         this._propertyPaths = [
             'currentProvider',
-            'eth.accounts',
         ];
         this._eventNames = utils.keyWords([
             'networkConnection',
@@ -33,12 +33,12 @@ class Web3Wrapper extends EventEmitter2 {
     doesExist() {
         return !_.isNull(this._web3);
     }
-    getFirstAccountIfExists() {
-        const address = this._web3.eth.accounts[0];
-        if (_.isUndefined(address)) {
+    async getFirstAccountIfExistsAsync() {
+        const addresses = await this.callAsync('eth.getAccounts');
+        if (_.isEmpty(addresses)) {
             return null;
         }
-        return address;
+        return addresses[0];
     }
     addNetworkConnectionListener(callback) {
         this.on(this._eventNames.networkConnection, callback);

@@ -87,7 +87,7 @@ class AcceptRequestDialog extends React.Component {
         };
         const requesterAddress = this.state.form.requesterAddress;
 
-        const senderAddress = this.props.blockchainState.getFirstAccountIfExists();
+        const senderAddress = await this.props.blockchainState.getFirstAccountIfExistsAsync();
         const isSenderAddressAvailable = !_.isNull(senderAddress);
         if (!isSenderAddressAvailable) {
             acceptRequestFormErrMsgs.general = 'Your ethereum address was not found. web3.eth.accounts \
@@ -105,8 +105,11 @@ class AcceptRequestDialog extends React.Component {
                 acceptRequestFormErrMsgs.general = 'There is no request associated with this address';
             } else if (request.wasAccepted) {
                 acceptRequestFormErrMsgs.general = 'Someone already accepted this valentine request';
-            } else if (!this.props.blockchainState.isRequestTargetedAtUser(request.valentineAddress)) {
-                acceptRequestFormErrMsgs.general = `This request can only be accepted by: ${request.valentineAddress}`;
+            } else {
+                const isRequestTargetedAtUser = await this.props.blockchainState.isRequestTargetedAtUserAsync(request.valentineAddress);
+                if (!isRequestTargetedAtUser) {
+                    acceptRequestFormErrMsgs.general = `This request can only be accepted by: ${request.valentineAddress}`;
+                }
             }
         }
 
