@@ -165,8 +165,9 @@ class BlockchainState extends EventEmitter2 {
             valentineRegistry.setProvider(this._provider.getProviderObj());
             try {
                 this._valentineRegistry = await valentineRegistry.deployed();
-                await this._getExistingRequestsAsync();
+                this._valentineRequests.clearAll();
                 this._fakeRequester.start(this._networkId);
+                await this._getExistingRequestsAsync();
                 this._startWatchingContractForEvents();
             } catch(err) {
                 const errMsg = `${err}`;
@@ -189,8 +190,6 @@ class BlockchainState extends EventEmitter2 {
         }, artificialLoadingDelay);
     }
     async _getExistingRequestsAsync() {
-        this._valentineRequests.clearAll();
-
         const numRequesters = await this._valentineRegistry.numRequesters.call();
         for(let i = 0; i < numRequesters.toNumber(); i++) {
             const request = await this._getRequestByIndexIfExistsAsync(i);
