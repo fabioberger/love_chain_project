@@ -49,7 +49,7 @@ class RequestFeedPost extends React.Component {
                 </div>
                 <div
                     className="customMessage p1 relative center"
-                    style={{fontFamily: 'Pacifico, cursive', fontSize: '18px'}}>
+                    style={{fontFamily: 'Pacifico, cursive'}}>
                     <div
                         className="absolute"
                         style={{lineHeight: 1.4, top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '85%'}} >
