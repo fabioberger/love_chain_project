@@ -83,6 +83,13 @@ class Home extends React.Component {
                 </div>
                 <div className="mx3 mb4 left-align" style={{color: colors.grey700}}>
                     <h1 className="center">About</h1>
+                    <div>
+                        {`The Love Chain Project is bringing paper/sms based valentine requests onto the blockchain. Let's leverage
+                          the awesome powers of immutability to give our valentine requests a lasting impression. Want to be
+                          cryptographically certain your valentine request was accepted by no one but your true love? Ask them for
+                          an Ethereum address they control, and add it to your request. They will then be the only person who
+                          can accept your request!`}
+                    </div>
                     <h3>What is Ethereum?</h3>
                     <div>
                         <OutLink href={configs.ETHEREUM_ORG_URL}>Ethereum</OutLink>{` is a blockchain technology
