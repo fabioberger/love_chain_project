@@ -81,7 +81,7 @@ class Home extends React.Component {
                         this._renderValentineFeed(hasBlockchainErr)
                     }
                 </div>
-                <div className="mx4 mb4 left-align" style={{color: colors.grey700}}>
+                <div className="mx3 mb4 left-align" style={{color: colors.grey700}}>
                     <h1 className="center">About</h1>
                     <h3>What is Ethereum?</h3>
                     <div>
