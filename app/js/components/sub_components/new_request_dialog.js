@@ -44,12 +44,12 @@ class NewRequestDialog extends React.Component {
                 disabled={this.state.isLoading}
                 onTouchTap={this._onRequestSubmitClickAsync.bind(this)} />,
         ];
-        const valentineAddressExplanation = 'If you specify your valentine\'s address here, only \
-            they will be able to accept your request. Otherwise, anyone can accept it.';
+        const valentineAddressExplanation = 'If you specify your love\'s address here, only \
+            they will be able to accept your declaration. Otherwise, anyone can accept it.';
 
         return (
             <Dialog
-                title="Create valentine request"
+                title="Create love declaration"
                 actions={dialogActions}
                 open={this.props.isOpen}
                 contentStyle={{width: '400px'}}
@@ -66,7 +66,7 @@ class NewRequestDialog extends React.Component {
                     onChange={e => this._onUpdateRequest('requesterName', e.target.value)} />
                 <TextField
                     className="block mt1"
-                    floatingLabelText={<RequiredLabelText label="Your valentine's first name" />}
+                    floatingLabelText={<RequiredLabelText label="Your love's first name" />}
                     errorText={this.state.requestFormErrMsgs.valentineName}
                     value={this.state.request.valentineName}
                     disabled={this.state.isLoading}
@@ -83,7 +83,7 @@ class NewRequestDialog extends React.Component {
                     onChange={e => this._onUpdateRequest('customMessage', e.target.value)} />
                 <div className="block mt1">
                     <TextField
-                        floatingLabelText="Your valentine's ethereum address"
+                        floatingLabelText="Your love's ethereum address"
                         errorText={this.state.requestFormErrMsgs.valentineAddress}
                         value={this.state.request.valentineAddress}
                         disabled={this.state.isLoading}
@@ -143,7 +143,7 @@ class NewRequestDialog extends React.Component {
         if (!_.isNull(completeRequest.requesterAddress)) {
             const doesExistingRequestExist = await this.props.blockchainState.didRequesterAlreadyRequestAsync();
             if (doesExistingRequestExist) {
-                requestFormErrMsgs.general = 'You can only send one valentine request per account.';
+                requestFormErrMsgs.general = 'You can only send one love declaration per account.';
             }
         }
 

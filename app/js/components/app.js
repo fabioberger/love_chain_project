@@ -36,7 +36,7 @@ class App extends React.Component {
                             <div
                                 className="h1 xsm-h1 center white-text"
                                 style={{fontFamily: 'Pacifico, cursive'}} >
-                                Happy Crypto Valentines Day!
+                                The Lovechain Project
                             </div>
                             <div className="white-text p2 center">
                                 Declare your love immutably on the blockchain

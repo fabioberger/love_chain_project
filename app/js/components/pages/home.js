@@ -55,14 +55,14 @@ class Home extends React.Component {
                         <div className="pb2">
                             <RaisedButton
                                 style={{width: 225}}
-                                label="Send Valentine Request"
+                                label="Create Love Declaration"
                                 className="acceptButton"
                                 disabled={!isLoaded || hasBlockchainErr}
                                 onTouchTap={() => this._onSendValentineRequestClick()} />
                         </div>
                         <div>
                             <RaisedButton
-                                label="Accept Valentine Request"
+                                label="Accept Love Declaration"
                                 className="sendButton"
                                 disabled={!isLoaded || hasBlockchainErr}
                                 onTouchTap={() => this._onAcceptValentineRequestClick()} />
@@ -84,11 +84,11 @@ class Home extends React.Component {
                 <div className="mx3 mb4 left-align" style={{color: colors.grey700}}>
                     <h1 className="center">About</h1>
                     <div>
-                        {`The Love Chain Project is bringing paper/sms based valentine requests onto the blockchain. Let's leverage
-                          the awesome powers of immutability to give our valentine requests a lasting impression. Want to be
-                          cryptographically certain your valentine request was accepted by no one but your true love? Ask them for
-                          an Ethereum address they control, and add it to your request. They will then be the only person who
-                          can accept your request!`}
+                        {`The Love Chain Project is bringing love declarations onto the blockchain. Let's leverage
+                          the awesome powers of immutability to tell our loved ones how much they mean to us. Want to be
+                          cryptographically certain your love declaration was accepted by no one but your true love? Ask them for
+                          an Ethereum address they control, and add it to your declaration. They will then be the only person who
+                          can accept your declaration!`}
                     </div>
                     <h3 className="mt3">What is Ethereum?</h3>
                     <div>
@@ -96,21 +96,21 @@ class Home extends React.Component {
                             similar to Bitcoin that let's people build decentralized
                             applications (Dapps) with ease. Dapps (like this one!) allow individuals
                             to interact with one another over the blockchain without a trusted
-                            third-party (i.e I cannot change or take down your valentine requests, so
+                            third-party (i.e I cannot change or take down your love declarations, so
                             be responsible!).`}
                     </div>
                     <h3 className="mt3">Look ma, no backend!</h3>
                     <div>
                         {`This app is "hosted on Ethereum". This means it is a front-end app
                         that runs entirely in your browser without a backing server. Instead it reads and
-                        writes valentine requests directly to/from the blockchain via this `}
+                        writes love declarations directly to/from the blockchain via this `}
                         {<OutLink href={configs.ETHERSCAN_MAINNET_URL}>smart contract</OutLink>}.
                         {` If you wanted, you could download and install an Ethereum node onto your own
                          computer and use it with this Dapp!`}
                     </div>
                     <h3 className="mt3">Cause</h3>
                     <div>
-                        {`Sending a valentine request to your loved ones will cost a small donation (`}
+                        {`Sending a love declaration will cost a small donation (`}
                         <span className="bold" data-tip data-for="donationTooltip">0.1 ETH</span>
                         {`) and
                         some gas (`}
@@ -125,11 +125,6 @@ class Home extends React.Component {
                     <div className="pt2">
                         Any additional donations can be sent directly to:{' '}
                         <CopyableAddress address="0x4757e41730892E288aC2B09bE5882D422a8DfEb5" />
-                    </div>
-                    <h3>Need help</h3>
-                    <div>
-                        Need help sending or accepting valentine requests? Found a bug? Contact us on{' '}
-                        <OutLink href="https://gitter.im/love_chain_project/Lobby#">Gitter</OutLink>.
                     </div>
                     <h3 className="mt3">Special thanks</h3>
                     <div>

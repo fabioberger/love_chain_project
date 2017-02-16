@@ -22,7 +22,7 @@ const PublicNodeNoticeDialog = props => {
             autoScrollBodyContent={true} >
             <div className="pt2" style={{color: colors.grey700}}>
                 <div>
-                    In order to create or accept valentine requests on the ethereum blockchain, we need
+                    In order to create or accept love declarations on the ethereum blockchain, we need
                      a way to interact with an ethereum wallet you control. There are two easy ways you
                       can enable us to do that:
                 </div>

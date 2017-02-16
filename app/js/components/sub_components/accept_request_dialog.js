@@ -43,12 +43,12 @@ class AcceptRequestDialog extends React.Component {
                 onTouchTap={this._onAcceptRequestClickAsync.bind(this)} />,
         ];
 
-        const requesterAddressExplanation = 'Ethereum address belonging to the person who sent you the request. \
-            You can copy-paste the address next to their name in the valentine request feed.';
+        const requesterAddressExplanation = 'Ethereum address belonging to the person who made the declaration. \
+            You can copy-paste the address next to their name in the declaration feed.';
 
         return (
             <Dialog
-                title="Accept valentine request"
+                title="Accept love declaration"
                 actions={dialogActions}
                 open={this.props.isOpen}
                 modal={this.state.isLoading}
@@ -57,7 +57,7 @@ class AcceptRequestDialog extends React.Component {
                 autoScrollBodyContent={true} >
                 <div className="block mt1" id="innerScrollDivMarker">
                     <TextField
-                        floatingLabelText={<RequiredLabelText label="Requester's ethereum address" />}
+                        floatingLabelText={<RequiredLabelText label="Sender's ethereum address" />}
                         errorText={this.state.acceptRequestFormErrMsgs.requesterAddress}
                         value={this.state.form.requesterAddress}
                         disabled={this.state.isLoading}
@@ -102,13 +102,13 @@ class AcceptRequestDialog extends React.Component {
         } else if (isSenderAddressAvailable) {
             const request = await this.props.blockchainState.getRequestIfExistsAsync(requesterAddress);
             if (!request) {
-                acceptRequestFormErrMsgs.general = 'There is no request associated with this address';
+                acceptRequestFormErrMsgs.general = 'There is no declaration associated with this address';
             } else if (request.wasAccepted) {
-                acceptRequestFormErrMsgs.general = 'Someone already accepted this valentine request';
+                acceptRequestFormErrMsgs.general = 'Someone already accepted this love declaration';
             } else {
                 const isRequestTargetedAtUser = await this.props.blockchainState.isRequestTargetedAtUserAsync(request.valentineAddress);
                 if (!isRequestTargetedAtUser) {
-                    acceptRequestFormErrMsgs.general = `This request can only be accepted by: ${request.valentineAddress}`;
+                    acceptRequestFormErrMsgs.general = `This declaration can only be accepted by: ${request.valentineAddress}`;
                 }
             }
         }
