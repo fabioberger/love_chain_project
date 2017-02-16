@@ -6,7 +6,8 @@
     "lint": "eslint ./",
     "build": "webpack",
     "dev": "webpack-dev-server --content-base app/public",
-    "deploy": "npm run build; aws s3 sync ./app/public/. s3://lovechainproject.com --region us-east-1 --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers"
+    "deploy": "npm run build; aws s3 sync ./app/public/. s3://lovechainproject.com --region us-east-1 --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers",
+    "test": "node ./node_modules/babel-cli/bin/babel.js ./uncompiled_tests --out-dir ./test; truffle test;"
   },
   "dependencies": {
     "Faker": "^0.7.2",
