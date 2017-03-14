@@ -4,7 +4,7 @@ dependencies:
 
 test:
   override:
-    - node node_modules/ethereumjs-testrpc/bin/testrpc
+    - node node_modules/ethereumjs-testrpc/bin/testrpc:
         background: true
     - node ./node_modules/babel-cli/bin/babel.js ./uncompiled_tests --out-dir ./test
     - truffle test
