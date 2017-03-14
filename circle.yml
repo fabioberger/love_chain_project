@@ -1,5 +1,10 @@
+machine:
+  node:
+    version: 6.1.0
+
 dependencies:
   pre:
+    - npm install -g npm@3.10.10
     - npm install ethereumjs-testrpc
 
 test:
